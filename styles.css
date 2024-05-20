@@ -1,0 +1,148 @@
+:root {
+  --font-primary: Geneva, Verdana, sans-serif;
+  --background-color-primary: #fff;
+  --color-primary: #444;
+  --color-button: #9cc4f1;
+  --color-title: #5c93e5;
+  --color-red: #f4a9a9;
+  --color-green: #d6f7d2;
+}
+
+/* Base CSS reset */
+/*
+  1. Use a more-intuitive box-sizing model.
+*/
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+/*
+  2. Remove default margin and padding
+*/
+* {
+  margin: 0;
+  padding: 0;
+}
+/*
+  Typographic tweaks!
+  3. Add accessible line-height
+  4. Improve text rendering
+*/
+body {
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+/*
+  5. Improve media defaults
+*/
+img,
+picture,
+video,
+canvas,
+svg {
+  display: block;
+  max-width: 100%;
+}
+/*
+  6. Remove built-in form typography styles
+*/
+input,
+button,
+textarea,
+select {
+  font: inherit;
+}
+/*
+  7. Avoid text overflows
+*/
+p,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  overflow-wrap: break-word;
+}
+
+/* utilities */
+
+.sr-only:not(:focus):not(:active) {
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  height: 1px;
+  overflow: hidden;
+  position: absolute;
+  white-space: nowrap;
+  width: 1px;
+}
+
+/* base styling */
+
+html {
+  font-size: 62.5%; /* 10px */
+}
+
+body {
+  font-family: var(--font-primary);
+  font-size: 1.8rem; /* 18px */
+  background-color: var(--background-color-primary);
+  color: var(--color-primary);
+}
+
+ul {
+  list-style: none;
+  margin: 0;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.btn {
+  max-width: 35rem;
+  width: 100%;
+  height: 5rem;
+  font-weight: bold;
+  text-transform: uppercase;
+  border: 0;
+  background-color: var(--color-button);
+  color: var(--color-primary);
+}
+.btn:hover {
+  background-color: var(--color-title);
+}
+
+/* styling */
+main {
+  margin: 4rem;
+}
+h1 {
+  text-align: center;
+}
+
+form {
+  font-size: 2.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 4rem;
+}
+
+.question-container {
+  display: flex;
+  flex-direction: column;
+}
+
+#question {
+  max-width: 70%;
+}
+.answer .red {
+  background-color: var(--color-red);
+}
+
+.answer .green {
+  background-color: var(--color-green);
+}

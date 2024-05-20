@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="styles.css" />
+    <title>Quiz app</title>
+  </head>
+  <body>
+    <h1>Quiz App</h1>
+    <main>
+      <section>
+        <form id="quiz-form">
+          <div class="question-container">
+            <label for="question"
+              >Please write a question (max 140 characters):</label
+            >
+            <input
+              type="text"
+              id="question"
+              name="question"
+              maxlength="140"
+              required
+            />
+          </div>
+          <div>
+            <label for="option1">Answer 1:</label>
+            <input
+              type="text"
+              id="answer1"
+              class="answer"
+              name="answer1"
+              required
+            />
+            <input type="radio" name="correctAnswer" value="answer1" required />
+            Correct
+          </div>
+          <div>
+            <label for="answer2">Answer 2:</label>
+            <input
+              type="text"
+              id="answer2"
+              class="answer"
+              name="answer2"
+              required
+            />
+            <input type="radio" name="correctAnswer" value="answer2" /> Correct
+          </div>
+          <div>
+            <label for="answer3">Answer 3:</label>
+            <input
+              type="text"
+              id="answer3"
+              class="answer"
+              name="answer3"
+              required
+            />
+            <input type="radio" name="correctAnswer" value="answer3" /> Correct
+          </div>
+          <div>
+            <label for="answer3">Answer 4:</label>
+            <input
+              type="text"
+              id="answer3"
+              class="answer"
+              name="answer3"
+              required
+            />
+            <input type="radio" name="correctAnswer" value="answer3" /> Correct
+          </div>
+          <button type="button" class="btn" id="randomize-btn">
+            Randomize answers
+          </button>
+          <button type="submit" class="btn" id="submit-btn">
+            Submit question
+          </button>
+        </form>
+      </section>
+    </main>
+    <script src="script.js"></script>
+  </body>
+</html>
