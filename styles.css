@@ -139,10 +139,15 @@ form {
 #question {
   max-width: 70%;
 }
-.answer .red {
-  background-color: var(--color-red);
+input,
+input:focus {
+  background-color: inherit;
 }
 
-.answer .green {
-  background-color: var(--color-green);
+.wrong-answer {
+  background-color: var(--color-red) !important;
+}
+
+.correct-answer {
+  background-color: var(--color-green) !important;
 }
