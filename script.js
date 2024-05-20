@@ -53,3 +53,20 @@ function handleRadioChange() {
     }
   }
 }
+
+// randomizing the order of the 4 option inputs
+randomizeBtn.addEventListener('click', randomizeAnswers);
+
+function randomizeAnswers() {
+  const answerInputsArray = Array.from(answerInputs);
+  const values = answerInputsArray.map((answer) => answer.value); //['Berlin', 'Copenhagen', 'Madrid', 'Rome']
+  //Fisher-Yates Sorting Algorithm
+  for (let i = values.length - 1; i > 0; i--) {
+    const randomIndex = Math.floor(Math.random() * (i + 1));
+    [values[i], values[randomIndex]] = [values[randomIndex], values[i]]; //array destructuring assignment
+  }
+  //assigning values to answer inputs
+  for (let i = 0; i < answerInputsArray.length; i++) {
+    answerInputsArray[i].value = values[i];
+  }
+}
