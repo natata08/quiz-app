@@ -8,10 +8,11 @@ const answerInputs = document.querySelectorAll('.answer'); //get NodeList
 const correctnessInputs = document.getElementsByName('correctAnswer'); //get NodeList
 const randomizeBtn = document.getElementById('randomize-btn');
 
+//submitting a question
 formEl.addEventListener('submit', submitForm);
 
 function submitForm(event) {
-  event.preventDefault(); // Prevent form from submitting default way
+  event.preventDefault(); // Prevent form from submitting in default way
   const answerInputsArray = Array.from(answerInputs); //Array.from for applying .map
 
   const questionItem = {
@@ -23,11 +24,13 @@ function submitForm(event) {
     })),
   };
   quizQuestions.push(questionItem);
+
   // Clear the form (text and color)
   event.target.reset();
   for (const answerInput of answerInputs) {
     answerInput.classList.remove('wrong-answer', 'correct-answer');
   }
+
   //add message of submitting successfully
   const messageEl = document.createElement('p');
   messageEl.innerText = 'Question submitted successfully!';
@@ -35,7 +38,7 @@ function submitForm(event) {
   sectionEl.appendChild(messageEl);
 }
 
-// Listen for changes radio inputs to change color of answer inputs
+// changing color for for the "correct" and ""wrong" answers
 //add addEventListener for each radio button
 for (const correctnessInput of correctnessInputs) {
   correctnessInput.addEventListener('change', handleRadioChange);
