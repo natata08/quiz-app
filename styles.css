@@ -119,13 +119,14 @@ a {
 /* styling */
 main {
   margin: 4rem;
+  font-size: 2.5rem;
 }
+
 h1 {
   text-align: center;
 }
 
 form {
-  font-size: 2.5rem;
   display: flex;
   flex-direction: column;
   gap: 4rem;
@@ -139,15 +140,15 @@ form {
 #question {
   max-width: 70%;
 }
-input,
-input:focus {
-  background-color: inherit;
-}
 
 .wrong-answer {
-  background-color: var(--color-red) !important;
+  background-color: var(--color-red);
 }
 
 .correct-answer {
-  background-color: var(--color-green) !important;
+  background-color: var(--color-green);
+}
+
+.message {
+  margin-top: 2rem;
 }

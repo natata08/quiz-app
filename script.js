@@ -1,10 +1,12 @@
 const quizQuestions = [];
 
+const sectionEl = document.querySelector('.question-section');
 const formEl = document.getElementById('quiz-form');
 const submitBtn = document.getElementById('submit-btn');
 const questionInput = document.getElementById('question');
 const answerInputs = document.querySelectorAll('.answer'); //get NodeList
 const correctnessInputs = document.getElementsByName('correctAnswer'); //get NodeList
+const randomizeBtn = document.getElementById('randomize-btn');
 
 formEl.addEventListener('submit', submitForm);
 
@@ -26,6 +28,11 @@ function submitForm(event) {
   for (const answerInput of answerInputs) {
     answerInput.classList.remove('wrong-answer', 'correct-answer');
   }
+  //add message of submitting successfully
+  const messageEl = document.createElement('p');
+  messageEl.innerText = 'Question submitted successfully!';
+  messageEl.classList.add('message');
+  sectionEl.appendChild(messageEl);
 }
 
 // Listen for changes radio inputs to change color of answer inputs
@@ -37,7 +44,6 @@ for (const correctnessInput of correctnessInputs) {
 function handleRadioChange() {
   for (let i = 0; i < answerInputs.length; i++) {
     const answerInput = answerInputs[i];
-    console.log(answerInput);
     if (correctnessInputs[i].checked) {
       answerInput.classList.add('correct-answer');
       answerInput.classList.remove('wrong-answer');
