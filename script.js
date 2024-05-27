@@ -37,6 +37,9 @@ function submitForm(event) {
   messageEl.innerText = 'Question submitted successfully!';
   messageEl.classList.add('message');
   sectionEl.appendChild(messageEl);
+  setTimeout(() => {
+    messageEl.remove();
+  }, '4000');
 }
 
 // changing color for for the "correct" and ""wrong" answers
