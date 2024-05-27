@@ -45,9 +45,9 @@ function submitForm(event) {
 
 // changing color for for the "correct" and ""wrong" answers
 //add addEventListener for each radio button
-for (const correctnessInput of correctnessInputs) {
+correctnessInputs.forEach((correctnessInput) => {
   correctnessInput.addEventListener('change', handleRadioChange);
-}
+});
 
 function handleRadioChange() {
   answerInputs.forEach((answerInput, index) => {
