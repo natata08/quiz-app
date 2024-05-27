@@ -3,10 +3,11 @@ const quizQuestions = [];
 const sectionEl = document.querySelector('.question-section');
 const formEl = document.getElementById('quiz-form');
 const submitBtn = document.getElementById('submit-btn');
+const randomizeBtn = document.getElementById('randomize-btn');
 const questionInput = document.getElementById('question');
 const answerInputs = document.querySelectorAll('.answer'); //get NodeList
 const correctnessInputs = document.getElementsByName('correctAnswer'); //get NodeList
-const randomizeBtn = document.getElementById('randomize-btn');
+const explanationInput = document.getElementById('explanation');
 
 //submitting a question
 formEl.addEventListener('submit', submitForm);
@@ -22,9 +23,9 @@ function submitForm(event) {
       text: answer.value,
       isCorrect: correctnessInputs[index].checked,
     })),
+    explanation: explanationInput.value,
   };
   quizQuestions.push(questionItem);
-
   // Clear the form (text and color)
   event.target.reset();
   for (const answerInput of answerInputs) {

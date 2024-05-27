@@ -80,8 +80,7 @@ body {
 }
 
 .btn {
-  max-width: 25rem;
-  width: 100%;
+  max-width: 20rem;
   height: 4rem;
   font-weight: bold;
   text-transform: uppercase;
@@ -95,7 +94,7 @@ body {
 
 /* styling */
 main {
-  font-size: 1.5rem;
+  font-size: 1.2rem;
 }
 
 h1 {
@@ -106,19 +105,21 @@ h1 {
 form {
   display: flex;
   flex-direction: column;
-  gap: 2rem;
+  gap: 1.5rem;
 }
 
 input[type='text'] {
   padding: 0.5rem;
 }
 
-.question-container {
+.question-container,
+.explanation-container {
   display: flex;
   flex-direction: column;
 }
 
-#question {
+#question,
+#explanation {
   max-width: 60%;
 }
 
