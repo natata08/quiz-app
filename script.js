@@ -26,6 +26,7 @@ function submitForm(event) {
     explanation: explanationInput.value,
   };
   quizQuestions.push(questionItem);
+
   // Clear the form (text and color)
   event.target.reset();
   for (const answerInput of answerInputs) {
@@ -49,31 +50,33 @@ for (const correctnessInput of correctnessInputs) {
 }
 
 function handleRadioChange() {
-  for (let i = 0; i < answerInputs.length; i++) {
-    const answerInput = answerInputs[i];
-    if (correctnessInputs[i].checked) {
+  answerInputs.forEach((answerInput, index) => {
+    if (correctnessInputs[index].checked) {
       answerInput.classList.add('correct-answer');
       answerInput.classList.remove('wrong-answer');
     } else {
       answerInput.classList.add('wrong-answer');
       answerInput.classList.remove('correct-answer');
     }
-  }
+  });
 }
 
 // randomizing the order of the 4 option inputs
 randomizeBtn.addEventListener('click', randomizeAnswers);
 
 function randomizeAnswers() {
-  const answerInputsArray = Array.from(answerInputs);
-  const values = answerInputsArray.map((answer) => answer.value); //['Berlin', 'Copenhagen', 'Madrid', 'Rome']
-  //Fisher-Yates Sorting Algorithm
-  for (let i = values.length - 1; i > 0; i--) {
-    const randomIndex = Math.floor(Math.random() * (i + 1));
-    [values[i], values[randomIndex]] = [values[randomIndex], values[i]]; //array destructuring assignment
-  }
-  //assigning values to answer inputs
-  for (let i = 0; i < answerInputsArray.length; i++) {
-    answerInputsArray[i].value = values[i];
-  }
+  //getting an array: [['sth', false], ['sth', false], ['sth', true],['sth', false]]
+  const answersAndCorrectness = Array.from(answerInputs).map(
+    (answer, index) => [answer.value, correctnessInputs[index].checked]
+  );
+  //shuffle the elements of an array
+  answersAndCorrectness.sort(() => Math.random() - 0.5);
+  //assigning values to the corresponding inputs and radio buttons
+  answerInputs.forEach((answerInput, index) => {
+    answerInput.value = answersAndCorrectness[index][0];
+    correctnessInputs[index].checked = answersAndCorrectness[index][1];
+  });
+  // change the colors only if randomizing after specifying the correctness
+  if (answersAndCorrectness.filter((item) => item.includes(true)).length)
+    handleRadioChange();
 }

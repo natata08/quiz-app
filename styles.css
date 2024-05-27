@@ -123,6 +123,12 @@ input[type='text'] {
   max-width: 60%;
 }
 
+.answer-container {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
 .wrong-answer {
   background-color: var(--color-red);
 }
