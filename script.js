@@ -130,6 +130,14 @@ correctnessInputs.forEach((correctnessInput) => {
 randomizeBtn.addEventListener('click', randomizeAnswers);
 showListBtn.addEventListener('click', showQuestionsList);
 
+//helper function
+function getMessage(message) {
+  const messageEl = document.createElement('p');
+  messageEl.innerText = message;
+  messageEl.classList.add('message');
+  return messageEl;
+}
+
 //submitting a question
 function submitForm(event) {
   event.preventDefault(); // Prevent form from submitting in default way
@@ -153,14 +161,11 @@ function submitForm(event) {
   }
 
   //add message of submitting successfully
-  const messageEl = document.createElement('p');
-  messageEl.innerText = 'Question submitted successfully!';
-  messageEl.classList.add('message');
-  document.querySelector('.question-input').appendChild(messageEl);
+  const message = getMessage('Question submitted successfully!');
+  document.querySelector('.question-input').appendChild(message);
   setTimeout(() => {
-    messageEl.remove();
-  }, '4000');
-  console.log(quizQuestions);
+    message.remove();
+  }, '3000');
 }
 
 // changing color for for the "correct" and ""wrong" answers
@@ -197,23 +202,33 @@ function randomizeAnswers() {
 //showing a list of all quiz questions added to the array
 function showQuestionsList() {
   questionsList.innerHTML = '';
-  const heading = document.createElement('h2');
-  heading.innerText = 'List of questions';
-  questionsList.appendChild(heading);
-  const ul = document.createElement('ul');
-  let output = '';
-  quizQuestions.map((item) => {
-    const { id, question, answers } = item;
-    output += `<li>
-    <h3>Question #${id}. ${question}</h3>
-    <div>
-    <p><span class="prefix">A</span> ${answers[0].text}</p>
-    <p><span class="prefix">B</span> ${answers[1].text}</p>
-    <p><span class="prefix">C</span> ${answers[2].text}</p>
-    <p><span class="prefix">D</span> ${answers[3].text}</p>
-    </div>
-  </li>`;
-  });
-  ul.innerHTML = output;
-  questionsList.appendChild(ul);
+  if (quizQuestions.length === 0) {
+    const message = getMessage('There are no questions.');
+    questionsList.appendChild(message);
+    setTimeout(() => {
+      message.remove();
+    }, '3000');
+  } else {
+    const heading = document.createElement('h2');
+    heading.innerText = 'List of questions';
+    questionsList.appendChild(heading);
+    const ul = document.createElement('ul');
+    let output = '';
+    quizQuestions.map((item) => {
+      const { id, question, answers } = item;
+      output += `<li>
+      <h3>Question #${id}. ${question}</h3>
+      <div>
+      <p><span class="prefix">A</span> ${answers[0].text}</p>
+      <p><span class="prefix">B</span> ${answers[1].text}</p>
+      <p><span class="prefix">C</span> ${answers[2].text}</p>
+      <p><span class="prefix">D</span> ${answers[3].text}</p>
+      </div>
+    </li>`;
+    });
+    ul.innerHTML = output;
+    questionsList.appendChild(ul);
+  }
 }
+
+//showing correct answer
