@@ -2,7 +2,7 @@ const quizQuestions = [
   {
     id: 1,
     question: 'Which planet is known as the Red Planet?',
-    options: [
+    answers: [
       { text: 'Earth', isCorrect: false },
       { text: 'Mars', isCorrect: true },
       { text: 'Jupiter', isCorrect: false },
@@ -14,7 +14,7 @@ const quizQuestions = [
   {
     id: 2,
     question: 'What is the largest ocean on Earth?',
-    options: [
+    answers: [
       { text: 'Atlantic Ocean', isCorrect: false },
       { text: 'Indian Ocean', isCorrect: false },
       { text: 'Pacific Ocean', isCorrect: true },
@@ -25,7 +25,7 @@ const quizQuestions = [
   {
     id: 3,
     question: "Who wrote 'Romeo and Juliet'?",
-    options: [
+    answers: [
       { text: 'William Shakespeare', isCorrect: true },
       { text: 'Mark Twain', isCorrect: false },
       { text: 'Charles Dickens', isCorrect: false },
@@ -36,7 +36,7 @@ const quizQuestions = [
   {
     id: 4,
     question: 'What is the hardest natural substance on Earth?',
-    options: [
+    answers: [
       { text: 'Gold', isCorrect: false },
       { text: 'Iron', isCorrect: false },
       { text: 'Diamond', isCorrect: true },
@@ -47,7 +47,7 @@ const quizQuestions = [
   {
     id: 5,
     question: 'In which year did the Titanic sink?',
-    options: [
+    answers: [
       { text: '1912', isCorrect: true },
       { text: '1905', isCorrect: false },
       { text: '1898', isCorrect: false },
@@ -58,7 +58,7 @@ const quizQuestions = [
   {
     id: 6,
     question: 'What is the smallest prime number?',
-    options: [
+    answers: [
       { text: '1', isCorrect: false },
       { text: '2', isCorrect: true },
       { text: '3', isCorrect: false },
@@ -69,7 +69,7 @@ const quizQuestions = [
   {
     id: 7,
     question: 'What is the chemical symbol for gold?',
-    options: [
+    answers: [
       { text: 'Au', isCorrect: true },
       { text: 'Ag', isCorrect: false },
       { text: 'Fe', isCorrect: false },
@@ -81,7 +81,7 @@ const quizQuestions = [
   {
     id: 8,
     question: 'Who developed the theory of relativity?',
-    options: [
+    answers: [
       { text: 'Isaac Newton', isCorrect: false },
       { text: 'Nikola Tesla', isCorrect: false },
       { text: 'Albert Einstein', isCorrect: true },
@@ -92,7 +92,7 @@ const quizQuestions = [
   {
     id: 9,
     question: 'What is the main ingredient in traditional Japanese miso soup?',
-    options: [
+    answers: [
       { text: 'Tofu', isCorrect: false },
       { text: 'Soybean paste', isCorrect: true },
       { text: 'Seaweed', isCorrect: false },
@@ -103,7 +103,7 @@ const quizQuestions = [
   {
     id: 10,
     question: "Which element has the chemical symbol 'O'?",
-    options: [
+    answers: [
       { text: 'Osmium', isCorrect: false },
       { text: 'Oxygen', isCorrect: true },
       { text: 'Oganesson', isCorrect: false },
@@ -113,18 +113,24 @@ const quizQuestions = [
   },
 ];
 
-const sectionEl = document.querySelector('.question-section');
 const formEl = document.getElementById('quiz-form');
 const submitBtn = document.getElementById('submit-btn');
 const randomizeBtn = document.getElementById('randomize-btn');
+const showListBtn = document.getElementById('show-list-btn');
 const questionInput = document.getElementById('question');
 const answerInputs = document.querySelectorAll('.answer'); //get NodeList
 const correctnessInputs = document.getElementsByName('correctAnswer'); //get NodeList
 const explanationInput = document.getElementById('explanation');
+const questionsList = document.querySelector('.question-list');
+
+formEl.addEventListener('submit', submitForm);
+correctnessInputs.forEach((correctnessInput) => {
+  correctnessInput.addEventListener('change', handleRadioChange);
+});
+randomizeBtn.addEventListener('click', randomizeAnswers);
+showListBtn.addEventListener('click', showQuestionsList);
 
 //submitting a question
-formEl.addEventListener('submit', submitForm);
-
 function submitForm(event) {
   event.preventDefault(); // Prevent form from submitting in default way
   const answerInputsArray = Array.from(answerInputs); //Array.from for applying .map
@@ -150,18 +156,14 @@ function submitForm(event) {
   const messageEl = document.createElement('p');
   messageEl.innerText = 'Question submitted successfully!';
   messageEl.classList.add('message');
-  sectionEl.appendChild(messageEl);
+  document.querySelector('.question-input').appendChild(messageEl);
   setTimeout(() => {
     messageEl.remove();
   }, '4000');
+  console.log(quizQuestions);
 }
 
 // changing color for for the "correct" and ""wrong" answers
-//add addEventListener for each radio button
-correctnessInputs.forEach((correctnessInput) => {
-  correctnessInput.addEventListener('change', handleRadioChange);
-});
-
 function handleRadioChange() {
   answerInputs.forEach((answerInput, index) => {
     if (correctnessInputs[index].checked) {
@@ -175,8 +177,6 @@ function handleRadioChange() {
 }
 
 // randomizing the order of the 4 option inputs
-randomizeBtn.addEventListener('click', randomizeAnswers);
-
 function randomizeAnswers() {
   //getting an array: [['sth', false], ['sth', false], ['sth', true],['sth', false]]
   const answersAndCorrectness = Array.from(answerInputs).map(
@@ -192,4 +192,28 @@ function randomizeAnswers() {
   // change the colors only if randomizing after specifying the correctness
   if (answersAndCorrectness.filter((item) => item.includes(true)).length)
     handleRadioChange();
+}
+
+//showing a list of all quiz questions added to the array
+function showQuestionsList() {
+  questionsList.innerHTML = '';
+  const heading = document.createElement('h2');
+  heading.innerText = 'List of questions';
+  questionsList.appendChild(heading);
+  const ul = document.createElement('ul');
+  let output = '';
+  quizQuestions.map((item) => {
+    const { id, question, answers } = item;
+    output += `<li>
+    <h3>Question #${id}. ${question}</h3>
+    <div>
+    <p><span class="prefix">A</span> ${answers[0].text}</p>
+    <p><span class="prefix">B</span> ${answers[1].text}</p>
+    <p><span class="prefix">C</span> ${answers[2].text}</p>
+    <p><span class="prefix">D</span> ${answers[3].text}</p>
+    </div>
+  </li>`;
+  });
+  ul.innerHTML = output;
+  questionsList.appendChild(ul);
 }
