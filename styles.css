@@ -1,11 +1,13 @@
 :root {
   --font-primary: Geneva, Verdana, sans-serif;
-  --background-color-primary: #fff;
+  --background-color-primary: #ecf5ff;
+  --color-gradient: linear-gradient(to bottom, #000428, #004e92);
   --color-primary: #444;
-  --color-button: #9cc4f1;
-  --color-title: #5c93e5;
-  --color-red: #f4a9a9;
-  --color-green: #d6f7d2;
+  --color-secondary: #fff;
+  --color-button: #004e92;
+  --color-button-hover: #06106a;
+  --color-red: #fe605554;
+  --color-green: #c7efcf83;
 }
 
 /* Base CSS reset */
@@ -76,36 +78,64 @@ body {
   font-family: var(--font-primary);
   background-color: var(--background-color-primary);
   color: var(--color-primary);
-  padding: 2rem;
 }
 
 .btn {
-  max-width: 20rem;
+  font-size: 1.1rem;
+  min-width: 16rem;
   height: 4rem;
   font-weight: bold;
   text-transform: uppercase;
+  letter-spacing: 0.1rem;
   border: 0;
   background-color: var(--color-button);
-  color: var(--color-primary);
+  color: var(--color-secondary);
 }
+
 .btn:hover {
-  background-color: var(--color-title);
+  background-color: var(--color-button-hover);
+  cursor: pointer;
+  box-shadow: 0 0.4rem 1.4rem 0 rgba(22, 57, 232, 0.5);
+  transform: translateY(-0.1rem);
+  transition: transform 150ms;
 }
 
 /* styling */
 main {
   font-size: 1.2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  max-width: 80%;
+  margin: 0 auto;
+  margin-top: 2rem;
+}
+
+header {
+  background: var(--color-gradient);
+  padding: 2rem 2rem;
 }
 
 h1 {
   text-align: center;
-  margin-bottom: 2rem;
+  color: var(--color-secondary);
+}
+
+h2 {
+  margin-bottom: 1.5rem;
+}
+
+.question-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 form {
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
+  width: 40rem;
 }
 
 input[type='text'] {
@@ -120,13 +150,26 @@ input[type='text'] {
 
 #question,
 #explanation {
-  max-width: 60%;
+  max-width: 100%;
 }
 
 .answer-container {
   display: flex;
   align-items: center;
   gap: 0.5rem;
+}
+
+.answer {
+  width: 50%;
+}
+explanation-container > label,
+.question-container > label {
+  margin-bottom: 0.5rem;
+}
+
+.btn-container {
+  display: flex;
+  justify-content: space-around;
 }
 
 .wrong-answer {
