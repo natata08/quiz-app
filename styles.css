@@ -235,6 +235,27 @@ explanation-container > label,
   margin-left: 1rem;
 }
 
+/* search */
+.search-container {
+  display: flex;
+}
+
+.search-container input {
+  border: 1px solid var(--color-button);
+}
+
+.search-btn {
+  padding: 0.7rem;
+  background-color: var(--color-button);
+  border: 1px solid var(--color-button);
+}
+
+.search-btn:hover {
+  background-color: var(--color-button-hover);
+  cursor: pointer;
+  box-shadow: 0 0.4rem 1.4rem 0 rgba(22, 57, 232, 0.5);
+}
+
 /* footer */
 footer {
   background: var(--color-gradient);

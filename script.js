@@ -256,21 +256,3 @@ function showCorrectAnswer(event) {
     }
   });
 }
-
-function createQuestionsList(questions) {
-  const ul = document.createElement('ul');
-  let output = '';
-  questions.map((item) => {
-    const { id, question, answers } = item;
-    output += `<li  class="item-answer${id}">
-      <h3>Question #${id}. ${question}</h3>
-      <p><span class="prefix">A</span> ${answers[0].text}</p>
-      <p><span class="prefix">B</span> ${answers[1].text}</p>
-      <p><span class="prefix">C</span> ${answers[2].text}</p>
-      <p><span class="prefix">D</span> ${answers[3].text}</p>
-      <button type="button" class="btn show-correct-btn" data-id="${id}">Show answer</button>
-    </li>`;
-  });
-  ul.innerHTML = output;
-  return ul;
-}
