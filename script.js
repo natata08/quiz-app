@@ -218,12 +218,11 @@ function showQuestionsList() {
       const { id, question, answers } = item;
       output += `<li>
       <h3>Question #${id}. ${question}</h3>
-      <div>
       <p><span class="prefix">A</span> ${answers[0].text}</p>
       <p><span class="prefix">B</span> ${answers[1].text}</p>
       <p><span class="prefix">C</span> ${answers[2].text}</p>
       <p><span class="prefix">D</span> ${answers[3].text}</p>
-      </div>
+      <button type="button" class="btn" id="show-correct-btn">Show answer</button>
     </li>`;
     });
     ul.innerHTML = output;

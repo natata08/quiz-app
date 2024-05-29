@@ -221,6 +221,13 @@ explanation-container > label,
   border-radius: 50%;
 }
 
+.question-list .btn {
+  margin-top: 0.5rem;
+  font-size: 0.8rem;
+  min-width: 9rem;
+  height: 3rem;
+}
+
 /* footer */
 footer {
   background: var(--color-gradient);
