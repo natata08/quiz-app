@@ -216,18 +216,38 @@ function showQuestionsList() {
     let output = '';
     quizQuestions.map((item) => {
       const { id, question, answers } = item;
-      output += `<li>
+      output += `<li  class="item-answer${id}">
       <h3>Question #${id}. ${question}</h3>
       <p><span class="prefix">A</span> ${answers[0].text}</p>
       <p><span class="prefix">B</span> ${answers[1].text}</p>
       <p><span class="prefix">C</span> ${answers[2].text}</p>
       <p><span class="prefix">D</span> ${answers[3].text}</p>
-      <button type="button" class="btn" id="show-correct-btn">Show answer</button>
+      <button type="button" class="btn show-correct-btn" data-id="${id}">Show answer</button>
     </li>`;
     });
     ul.innerHTML = output;
     questionsList.appendChild(ul);
   }
+
+  //adding event listeners to buttons Show answer
+  const buttonsShowAnswer = document.querySelectorAll('.show-correct-btn');
+  buttonsShowAnswer.forEach((button) => {
+    button.addEventListener('click', showCorrectAnswer);
+  });
 }
 
 //showing correct answer
+function showCorrectAnswer(event) {
+  const targetQuestionId = parseInt(event.target.dataset.id);
+  const targetQuestion = quizQuestions.find(
+    (question) => question.id === targetQuestionId
+  );
+  targetQuestion.answers.forEach((answer, index) => {
+    if (answer.isCorrect) {
+      const correctAnswer = document
+        .querySelector(`.item-answer${targetQuestionId}`)
+        .querySelectorAll('p')[index];
+      correctAnswer.classList.add('pseudo-element');
+    }
+  });
+}

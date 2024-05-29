@@ -228,6 +228,12 @@ explanation-container > label,
   height: 3rem;
 }
 
+.pseudo-element::after {
+  content: '✔️';
+  color: var(--color-primary);
+  margin-left: 1rem;
+}
+
 /* footer */
 footer {
   background: var(--color-gradient);
