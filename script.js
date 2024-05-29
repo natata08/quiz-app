@@ -138,6 +138,24 @@ function getMessage(message) {
   return messageEl;
 }
 
+function createQuestionsList(questions) {
+  const ul = document.createElement('ul');
+  let output = '';
+  questions.map((item) => {
+    const { id, question, answers } = item;
+    output += `<li  class="item-answer${id}">
+      <h3>Question #${id}. ${question}</h3>
+      <p><span class="prefix">A</span> ${answers[0].text}</p>
+      <p><span class="prefix">B</span> ${answers[1].text}</p>
+      <p><span class="prefix">C</span> ${answers[2].text}</p>
+      <p><span class="prefix">D</span> ${answers[3].text}</p>
+      <button type="button" class="btn show-correct-btn" data-id="${id}">Show answer</button>
+    </li>`;
+  });
+  ul.innerHTML = output;
+  return ul;
+}
+
 //submitting a question
 function submitForm(event) {
   event.preventDefault(); // Prevent form from submitting in default way
@@ -212,20 +230,7 @@ function showQuestionsList() {
     const heading = document.createElement('h2');
     heading.innerText = 'List of questions';
     questionsList.appendChild(heading);
-    const ul = document.createElement('ul');
-    let output = '';
-    quizQuestions.map((item) => {
-      const { id, question, answers } = item;
-      output += `<li  class="item-answer${id}">
-      <h3>Question #${id}. ${question}</h3>
-      <p><span class="prefix">A</span> ${answers[0].text}</p>
-      <p><span class="prefix">B</span> ${answers[1].text}</p>
-      <p><span class="prefix">C</span> ${answers[2].text}</p>
-      <p><span class="prefix">D</span> ${answers[3].text}</p>
-      <button type="button" class="btn show-correct-btn" data-id="${id}">Show answer</button>
-    </li>`;
-    });
-    ul.innerHTML = output;
+    const ul = createQuestionsList(quizQuestions);
     questionsList.appendChild(ul);
   }
 
@@ -247,7 +252,25 @@ function showCorrectAnswer(event) {
       const correctAnswer = document
         .querySelector(`.item-answer${targetQuestionId}`)
         .querySelectorAll('p')[index];
-      correctAnswer.classList.add('pseudo-element');
+      correctAnswer.classList.toggle('pseudo-element');
     }
   });
+}
+
+function createQuestionsList(questions) {
+  const ul = document.createElement('ul');
+  let output = '';
+  questions.map((item) => {
+    const { id, question, answers } = item;
+    output += `<li  class="item-answer${id}">
+      <h3>Question #${id}. ${question}</h3>
+      <p><span class="prefix">A</span> ${answers[0].text}</p>
+      <p><span class="prefix">B</span> ${answers[1].text}</p>
+      <p><span class="prefix">C</span> ${answers[2].text}</p>
+      <p><span class="prefix">D</span> ${answers[3].text}</p>
+      <button type="button" class="btn show-correct-btn" data-id="${id}">Show answer</button>
+    </li>`;
+  });
+  ul.innerHTML = output;
+  return ul;
 }

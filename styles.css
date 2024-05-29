@@ -8,6 +8,7 @@
   --color-button-hover: #06106a;
   --color-red: #fe605554;
   --color-green: #c7efcf83;
+  --color-dark-green: #2b9240;
 }
 
 /* Base CSS reset */
@@ -101,7 +102,7 @@ body {
 }
 
 main {
-  font-size: 1.2rem;
+  font-size: 1.4rem;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -229,8 +230,8 @@ explanation-container > label,
 }
 
 .pseudo-element::after {
-  content: '✔️';
-  color: var(--color-primary);
+  content: '\2713 correct';
+  color: var(--color-dark-green);
   margin-left: 1rem;
 }
 
