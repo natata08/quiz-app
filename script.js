@@ -238,23 +238,32 @@ function showQuestionsList() {
     } else {
       const ul = createQuestionsList(quizQuestions);
       questionsList.appendChild(ul);
+      //adding event listeners to buttons Show answer
+      const buttonsShowAnswer = document.querySelectorAll('.show-correct-btn');
+      buttonsShowAnswer.forEach((button) => {
+        button.addEventListener('click', showCorrectAnswer);
+      });
+
       showListBtn.innerText = 'Hide questions';
     }
   } else {
     questionsList.innerHTML = '';
     showListBtn.innerText = 'Show questions';
   }
-
-  //adding event listeners to buttons Show answer
-  const buttonsShowAnswer = document.querySelectorAll('.show-correct-btn');
-  buttonsShowAnswer.forEach((button) => {
-    button.addEventListener('click', showCorrectAnswer);
-  });
 }
 
 //showing correct answer
 function showCorrectAnswer(event) {
-  const targetQuestionId = parseInt(event.target.dataset.id);
+  const clickedBtn = event.target;
+  if (clickedBtn.innerText.toLowerCase() === 'show answer') {
+    console.log('1', clickedBtn.innerText);
+    clickedBtn.innerText = 'Hide answer';
+  } else {
+    console.log('2', clickedBtn.innerText);
+    clickedBtn.innerText = 'Show answer';
+  }
+  console.log('3', clickedBtn.innerText);
+  const targetQuestionId = parseInt(clickedBtn.dataset.id);
   const targetQuestion = quizQuestions.find(
     (question) => question.id === targetQuestionId
   );
@@ -272,7 +281,12 @@ function showCorrectAnswer(event) {
 function searchQuestions() {
   const keyword = document.getElementById('search-input').value;
   const filteredQuestions = filterQuestions(quizQuestions, keyword);
+
   const ul = createQuestionsList(filteredQuestions);
   questionsList.innerHTML = '';
   questionsList.appendChild(ul);
+  const buttonsShowAnswer = document.querySelectorAll('.show-correct-btn');
+  buttonsShowAnswer.forEach((button) => {
+    button.addEventListener('click', showCorrectAnswer);
+  });
 }
