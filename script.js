@@ -123,6 +123,7 @@ const answerInputs = document.querySelectorAll('.answer'); //get NodeList
 const correctnessInputs = document.getElementsByName('correctAnswer'); //get NodeList
 const explanationInput = document.getElementById('explanation');
 const questionsList = document.querySelector('.list-container');
+const searchInput = document.getElementById('search-input');
 
 formEl.addEventListener('submit', submitForm);
 correctnessInputs.forEach((correctnessInput) => {
@@ -131,6 +132,12 @@ correctnessInputs.forEach((correctnessInput) => {
 randomizeBtn.addEventListener('click', randomizeAnswers);
 showListBtn.addEventListener('click', showQuestionsList);
 searchBtn.addEventListener('click', searchQuestions);
+
+searchInput.addEventListener('keypress', (event) => {
+  if (event.key === 'Enter') {
+    searchQuestions();
+  }
+});
 
 //helper function
 function getMessage(message) {
@@ -279,7 +286,7 @@ function showCorrectAnswer(event) {
 
 // filtering the questions by searching the content of the question
 function searchQuestions() {
-  const keyword = document.getElementById('search-input').value;
+  const keyword = searchInput.value;
   const filteredQuestions = filterQuestions(quizQuestions, keyword);
 
   const ul = createQuestionsList(filteredQuestions);
