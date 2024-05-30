@@ -117,6 +117,7 @@ const formEl = document.getElementById('quiz-form');
 const submitBtn = document.getElementById('submit-btn');
 const randomizeBtn = document.getElementById('randomize-btn');
 const showListBtn = document.getElementById('show-list-btn');
+const searchBtn = document.getElementById('search-btn');
 const questionInput = document.getElementById('question');
 const answerInputs = document.querySelectorAll('.answer'); //get NodeList
 const correctnessInputs = document.getElementsByName('correctAnswer'); //get NodeList
@@ -129,6 +130,7 @@ correctnessInputs.forEach((correctnessInput) => {
 });
 randomizeBtn.addEventListener('click', randomizeAnswers);
 showListBtn.addEventListener('click', showQuestionsList);
+searchBtn.addEventListener('click', searchQuestions);
 
 //helper function
 function getMessage(message) {
@@ -154,6 +156,12 @@ function createQuestionsList(questions) {
   });
   ul.innerHTML = output;
   return ul;
+}
+
+function filterQuestions(questions, keyword) {
+  return questions.filter((question) =>
+    question.question.toLowerCase().includes(keyword.toLowerCase().trim())
+  );
 }
 
 //submitting a question
@@ -258,4 +266,13 @@ function showCorrectAnswer(event) {
       correctAnswer.classList.toggle('pseudo-element');
     }
   });
+}
+
+// filtering the questions by searching the content of the question
+function searchQuestions() {
+  const keyword = document.getElementById('search-input').value;
+  const filteredQuestions = filterQuestions(quizQuestions, keyword);
+  const ul = createQuestionsList(filteredQuestions);
+  questionsList.innerHTML = '';
+  questionsList.appendChild(ul);
 }
