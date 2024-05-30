@@ -6,6 +6,7 @@
   --color-secondary: #fff;
   --color-button: #004e92;
   --color-button-hover: #06106a;
+  --color-shadow: rgba(22, 57, 232, 0.5);
   --color-red: #fe605554;
   --color-green: #c7efcf83;
   --color-dark-green: #2b9240;
@@ -96,7 +97,7 @@ body {
 .btn:hover {
   background-color: var(--color-button-hover);
   cursor: pointer;
-  box-shadow: 0 0.4rem 1.4rem 0 rgba(22, 57, 232, 0.5);
+  box-shadow: 0 0.4rem 1.4rem 0 var(--color-shadow);
   transform: translateY(-0.1rem);
   transition: transform 150ms;
 }
@@ -251,7 +252,7 @@ explanation-container > label,
 .search-btn:hover {
   background-color: var(--color-button-hover);
   cursor: pointer;
-  box-shadow: 0 0.4rem 1.4rem 0 rgba(22, 57, 232, 0.5);
+  box-shadow: 0 0.4rem 1.4rem 0 var(--color-shadow);
 }
 
 /* footer */
