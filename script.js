@@ -121,7 +121,7 @@ const questionInput = document.getElementById('question');
 const answerInputs = document.querySelectorAll('.answer'); //get NodeList
 const correctnessInputs = document.getElementsByName('correctAnswer'); //get NodeList
 const explanationInput = document.getElementById('explanation');
-const questionsList = document.querySelector('.question-list');
+const questionsList = document.querySelector('.list-container');
 
 formEl.addEventListener('submit', submitForm);
 correctnessInputs.forEach((correctnessInput) => {
@@ -219,19 +219,22 @@ function randomizeAnswers() {
 
 //showing a list of all quiz questions added to the array
 function showQuestionsList() {
-  questionsList.innerHTML = '';
-  if (quizQuestions.length === 0) {
-    const message = getMessage('There are no questions.');
-    questionsList.appendChild(message);
-    setTimeout(() => {
-      message.remove();
-    }, '3000');
+  document.querySelector('.question-list').classList.toggle('hidden');
+  if (questionsList.innerHTML === '') {
+    if (quizQuestions.length === 0) {
+      const message = getMessage('There are no questions.');
+      questionsList.appendChild(message);
+      setTimeout(() => {
+        message.remove();
+      }, '3000');
+    } else {
+      const ul = createQuestionsList(quizQuestions);
+      questionsList.appendChild(ul);
+      showListBtn.innerText = 'Hide questions';
+    }
   } else {
-    const heading = document.createElement('h2');
-    heading.innerText = 'List of questions';
-    questionsList.appendChild(heading);
-    const ul = createQuestionsList(quizQuestions);
-    questionsList.appendChild(ul);
+    questionsList.innerHTML = '';
+    showListBtn.innerText = 'Show questions';
   }
 
   //adding event listeners to buttons Show answer
