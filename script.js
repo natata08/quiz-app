@@ -125,6 +125,7 @@ const explanationInput = document.getElementById('explanation');
 const questionsList = document.querySelector('.list-container');
 const searchInput = document.getElementById('search-input');
 
+//adding event listeners
 formEl.addEventListener('submit', submitForm);
 correctnessInputs.forEach((correctnessInput) => {
   correctnessInput.addEventListener('change', handleRadioChange);
@@ -165,6 +166,22 @@ function createQuestionsList(questions) {
   return ul;
 }
 
+function displayQuestionsList(questions) {
+  questionsList.innerHTML = '';
+  if (questions.length === 0) {
+    const message = getMessage('There are no questions.');
+    questionsList.appendChild(message);
+  } else {
+    const ul = createQuestionsList(questions);
+    questionsList.appendChild(ul);
+    //adding event listeners to buttons Show answer
+    const buttonsShowAnswer = document.querySelectorAll('.show-correct-btn');
+    buttonsShowAnswer.forEach((button) => {
+      button.addEventListener('click', showCorrectAnswer);
+    });
+  }
+}
+
 function filterQuestions(questions, keyword) {
   return questions.filter((question) =>
     question.question.toLowerCase().includes(keyword.toLowerCase().trim())
@@ -201,7 +218,7 @@ function submitForm(event) {
   }, '3000');
 }
 
-// changing color for for the "correct" and ""wrong" answers
+// changing color for the "correct" and ""wrong" answers
 function handleRadioChange() {
   answerInputs.forEach((answerInput, index) => {
     if (correctnessInputs[index].checked) {
@@ -236,23 +253,8 @@ function randomizeAnswers() {
 function showQuestionsList() {
   document.querySelector('.question-list').classList.toggle('hidden');
   if (questionsList.innerHTML === '') {
-    if (quizQuestions.length === 0) {
-      const message = getMessage('There are no questions.');
-      questionsList.appendChild(message);
-      setTimeout(() => {
-        message.remove();
-      }, '3000');
-    } else {
-      const ul = createQuestionsList(quizQuestions);
-      questionsList.appendChild(ul);
-      //adding event listeners to buttons Show answer
-      const buttonsShowAnswer = document.querySelectorAll('.show-correct-btn');
-      buttonsShowAnswer.forEach((button) => {
-        button.addEventListener('click', showCorrectAnswer);
-      });
-
-      showListBtn.innerText = 'Hide questions';
-    }
+    displayQuestionsList(quizQuestions);
+    showListBtn.innerText = 'Hide questions';
   } else {
     questionsList.innerHTML = '';
     showListBtn.innerText = 'Show questions';
@@ -262,18 +264,18 @@ function showQuestionsList() {
 //showing correct answer
 function showCorrectAnswer(event) {
   const clickedBtn = event.target;
+  //changing the button text
   if (clickedBtn.innerText.toLowerCase() === 'show answer') {
-    console.log('1', clickedBtn.innerText);
     clickedBtn.innerText = 'Hide answer';
   } else {
-    console.log('2', clickedBtn.innerText);
     clickedBtn.innerText = 'Show answer';
   }
-  console.log('3', clickedBtn.innerText);
+  //finding target question
   const targetQuestionId = parseInt(clickedBtn.dataset.id);
   const targetQuestion = quizQuestions.find(
     (question) => question.id === targetQuestionId
   );
+  //adding or removing class to paragraph of correct answer
   targetQuestion.answers.forEach((answer, index) => {
     if (answer.isCorrect) {
       const correctAnswer = document
@@ -288,12 +290,5 @@ function showCorrectAnswer(event) {
 function searchQuestions() {
   const keyword = searchInput.value;
   const filteredQuestions = filterQuestions(quizQuestions, keyword);
-
-  const ul = createQuestionsList(filteredQuestions);
-  questionsList.innerHTML = '';
-  questionsList.appendChild(ul);
-  const buttonsShowAnswer = document.querySelectorAll('.show-correct-btn');
-  buttonsShowAnswer.forEach((button) => {
-    button.addEventListener('click', showCorrectAnswer);
-  });
+  displayQuestionsList(filteredQuestions);
 }
