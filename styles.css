@@ -231,7 +231,7 @@ explanation-container > label,
   height: 3rem;
 }
 
-.pseudo-element::after {
+.correct-checkmark::after {
   content: '\2713 correct';
   color: var(--color-dark-green);
   margin-left: 1rem;

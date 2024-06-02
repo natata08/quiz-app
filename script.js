@@ -112,6 +112,7 @@ const quizQuestions = [
     explanation: "The chemical symbol 'O' stands for Oxygen.",
   },
 ];
+const prefixes = ['A', 'B', 'C', 'D'];
 
 const formEl = document.getElementById('quiz-form');
 const submitBtn = document.getElementById('submit-btn');
@@ -155,10 +156,12 @@ function createQuestionsList(questions) {
     const { id, question, answers } = item;
     output += `<li  class="item-answer${id}">
       <h3>Question #${id}. ${question}</h3>
-      <p><span class="prefix">A</span> ${answers[0].text}</p>
-      <p><span class="prefix">B</span> ${answers[1].text}</p>
-      <p><span class="prefix">C</span> ${answers[2].text}</p>
-      <p><span class="prefix">D</span> ${answers[3].text}</p>
+      ${answers
+        .map(
+          (answer, index) =>
+            `<p><span class="prefix">${prefixes[index]}</span> ${answer.text}</p>`
+        )
+        .join('')}
       <button type="button" class="btn show-correct-btn" data-id="${id}">Show answer</button>
     </li>`;
   });
@@ -271,7 +274,7 @@ function showCorrectAnswer(event) {
     clickedBtn.innerText = 'Show answer';
   }
   //finding target question
-  const targetQuestionId = parseInt(clickedBtn.dataset.id);
+  const targetQuestionId = +clickedBtn.dataset.id;
   const targetQuestion = quizQuestions.find(
     (question) => question.id === targetQuestionId
   );
@@ -281,7 +284,7 @@ function showCorrectAnswer(event) {
       const correctAnswer = document
         .querySelector(`.item-answer${targetQuestionId}`)
         .querySelectorAll('p')[index];
-      correctAnswer.classList.toggle('pseudo-element');
+      correctAnswer.classList.toggle('correct-checkmark');
     }
   });
 }
