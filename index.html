@@ -134,20 +134,20 @@
       </section>
       <section class="game">
         <h2>Let's play!</h2>
-        <div class="game-intro">
+        <form class="game-intro">
           <p>Please enter your names:</p>
           <div>
             <label for="player1">Player 1: </label>
-            <input type="text" id="player1" name="player1" />
+            <input type="text" id="player1" name="player-name" required />
           </div>
           <div>
             <label for="player2">Player 2: </label>
-            <input type="text" id="player2" name="player2" />
+            <input type="text" id="player2" name="player-name" required />
           </div>
-          <button type="button" class="btn" id="start-quiz-btn">
+          <button type="submit" class="btn" id="start-quiz-btn" disabled>
             Start Quiz
           </button>
-        </div>
+        </form>
 
         <div class="game-controller">
           <div class="player-section">

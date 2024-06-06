@@ -115,6 +115,18 @@ body {
   transition: transform 150ms;
 }
 
+.btn[disabled] {
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+.btn[disabled]:hover {
+  cursor: not-allowed;
+  background-color: var(--color-button);
+  box-shadow: none;
+  transform: none;
+}
+
 main {
   font-size: 1.4rem;
   display: flex;

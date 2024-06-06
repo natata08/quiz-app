@@ -126,6 +126,7 @@ const explanationInput = document.getElementById('explanation');
 const questionsList = document.querySelector('.list-container');
 const searchInput = document.getElementById('search-input');
 const startQuizBtn = document.getElementById('start-quiz-btn');
+const playerNameInputs = document.getElementsByName('player-name');
 
 //adding event listeners
 formEl.addEventListener('submit', submitForm);
@@ -305,7 +306,20 @@ function searchQuestions() {
   displayQuestionsList(filteredQuestions);
 }
 
+//entering names
+function checkInputs() {
+  const isInputsFilled = Array.from(playerNameInputs).every(
+    (input) => input.value.trim() !== ''
+  );
+  startQuizBtn.disabled = !isInputsFilled;
+}
+
+playerNameInputs.forEach((input) =>
+  input.addEventListener('input', checkInputs)
+);
+
 //start game
-function startQuiz() {
+function startQuiz(event) {
+  event.preventDefault();
   document.querySelector('.game-controller').classList.toggle('hidden');
 }
