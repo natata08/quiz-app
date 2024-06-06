@@ -125,6 +125,7 @@ const correctnessInputs = document.getElementsByName('correctAnswer'); //get Nod
 const explanationInput = document.getElementById('explanation');
 const questionsList = document.querySelector('.list-container');
 const searchInput = document.getElementById('search-input');
+const startQuizBtn = document.getElementById('start-quiz-btn');
 
 //adding event listeners
 formEl.addEventListener('submit', submitForm);
@@ -133,6 +134,7 @@ correctnessInputs.forEach((correctnessInput) => {
 });
 randomizeBtn.addEventListener('click', randomizeAnswers);
 showListBtn.addEventListener('click', showQuestionsList);
+startQuizBtn.addEventListener('click', startQuiz);
 
 //helper function
 function getMessage(message) {
@@ -302,3 +304,6 @@ function searchQuestions() {
   const filteredQuestions = filterQuestions(quizQuestions, keyword);
   displayQuestionsList(filteredQuestions);
 }
+
+//start game
+function startQuiz() {}
