@@ -134,10 +134,6 @@ correctnessInputs.forEach((correctnessInput) => {
 randomizeBtn.addEventListener('click', randomizeAnswers);
 showListBtn.addEventListener('click', showQuestionsList);
 
-searchInput.addEventListener('keyup', () => {
-  searchQuestions();
-});
-
 //helper function
 function getMessage(message) {
   const messageEl = document.createElement('p');
@@ -287,6 +283,20 @@ function showCorrectAnswer(event) {
 }
 
 // filtering the questions by searching the content of the question
+const debounce = (fn, delay = 1000) => {
+  let timerId = null;
+  return (...args) => {
+    clearTimeout(timerId);
+    timerId = setTimeout(() => fn(...args), delay);
+  };
+};
+
+const onInput = debounce(searchQuestions, 1000);
+
+searchInput.addEventListener('input', () => {
+  onInput();
+});
+
 function searchQuestions() {
   const keyword = searchInput.value;
   const filteredQuestions = filterQuestions(quizQuestions, keyword);
