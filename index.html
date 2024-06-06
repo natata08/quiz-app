@@ -7,9 +7,13 @@
     <title>Quiz app</title>
   </head>
   <body>
-    <h1>Quiz App</h1>
+    <header>
+      <h1>Quiz App</h1>
+    </header>
+
     <main>
-      <section class="question-section">
+      <section class="question-input">
+        <h2>Add a Question</h2>
         <form id="quiz-form">
           <div class="question-container">
             <label for="question"
@@ -101,15 +105,31 @@
             >
             <input type="text" id="explanation" name="explanation" required />
           </div>
-          <button type="button" class="btn" id="randomize-btn">
-            Randomize answers
-          </button>
-          <button type="submit" class="btn" id="submit-btn">
-            Submit question
-          </button>
+          <div class="btn-container">
+            <button type="button" class="btn" id="randomize-btn">
+              Randomize answers
+            </button>
+            <button type="submit" class="btn" id="submit-btn">
+              Submit question
+            </button>
+            <button type="button" class="btn" id="show-list-btn">
+              Show questions
+            </button>
+          </div>
         </form>
       </section>
+
+      <section class="question-list hidden">
+        <h2>List of questions</h2>
+        <input
+          type="search"
+          id="search-input"
+          placeholder="Search for questions"
+        />
+        <div class="list-container"></div>
+      </section>
     </main>
+    <footer><p>© 2024 Quiz App. All rights reserved.</p></footer>
     <script src="script.js"></script>
   </body>
 </html>
