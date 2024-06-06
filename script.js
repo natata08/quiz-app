@@ -133,12 +133,9 @@ correctnessInputs.forEach((correctnessInput) => {
 });
 randomizeBtn.addEventListener('click', randomizeAnswers);
 showListBtn.addEventListener('click', showQuestionsList);
-searchBtn.addEventListener('click', searchQuestions);
 
-searchInput.addEventListener('keypress', (event) => {
-  if (event.key === 'Enter') {
-    searchQuestions();
-  }
+searchInput.addEventListener('keyup', () => {
+  searchQuestions();
 });
 
 //helper function

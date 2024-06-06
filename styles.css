@@ -127,6 +127,12 @@ h2 {
   margin-bottom: 2rem;
 }
 
+input[type='text'],
+input[type='search'] {
+  padding: 0.5rem 0.7rem;
+  border: 1px solid var(--color-button);
+}
+
 .question-input,
 .question-list {
   display: flex;
@@ -141,11 +147,6 @@ form {
   flex-direction: column;
   gap: 1.5rem;
   width: 40rem;
-}
-
-input[type='text'] {
-  padding: 0.5rem;
-  border: 1px solid var(--color-button);
 }
 
 .question-container,
@@ -218,9 +219,9 @@ explanation-container > label,
   justify-content: center;
   background-color: var(--color-button);
   color: var(--color-secondary);
-  width: 2.5rem; /* Size of the circle */
-  height: 2.5rem; /* Size of the circle */
-  color: white; /* Text color */
+  width: 2.5rem;
+  height: 2.5rem;
+  color: white;
   border-radius: 50%;
 }
 
@@ -238,21 +239,9 @@ explanation-container > label,
 }
 
 /* search */
-.search-container {
-  display: flex;
+#search-input {
   margin-bottom: 2rem;
-}
-
-.search-btn {
-  padding: 0.7rem;
-  background-color: var(--color-button);
-  border: 1px solid var(--color-button);
-}
-
-.search-btn:hover {
-  background-color: var(--color-button-hover);
-  cursor: pointer;
-  box-shadow: 0 0.4rem 1.4rem 0 var(--color-shadow);
+  padding-left: 0.7rem;
 }
 
 /* footer */
