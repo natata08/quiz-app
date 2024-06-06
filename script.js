@@ -306,4 +306,6 @@ function searchQuestions() {
 }
 
 //start game
-function startQuiz() {}
+function startQuiz() {
+  document.querySelector('.game-controller').classList.toggle('hidden');
+}

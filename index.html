@@ -4,6 +4,10 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="styles.css" />
+    <link
+      rel="stylesheet"
+      href="https://use.fontawesome.com/releases/v6.5.2/css/all.css"
+    />
     <title>Quiz app</title>
   </head>
   <body>
@@ -130,18 +134,39 @@
       </section>
       <section class="game">
         <h2>Let's play!</h2>
-        <p>Please enter your names:</p>
-        <div>
-          <label for="player1">Player 1: </label>
-          <input type="text" id="player1" name="player1" />
+        <div class="game-intro">
+          <p>Please enter your names:</p>
+          <div>
+            <label for="player1">Player 1: </label>
+            <input type="text" id="player1" name="player1" />
+          </div>
+          <div>
+            <label for="player2">Player 2: </label>
+            <input type="text" id="player2" name="player2" />
+          </div>
+          <button type="button" class="btn" id="start-quiz-btn">
+            Start Quiz
+          </button>
         </div>
-        <div>
-          <label for="player2">Player 2: </label>
-          <input type="text" id="player2" name="player2" />
+
+        <div class="game-controller">
+          <div class="player-section">
+            <h3 class="player-name">Name</h3>
+            <p>Points: <span id="player-points">0</span></p>
+            <div>
+              <button class="correct-btn btn">Correct</button>
+              <button class="wrong-btn btn">Wrong</button>
+            </div>
+          </div>
+          <div class="player-section">
+            <h3 class="player-name">Name</h3>
+            <p>Points: <span id="player-points">0</span></p>
+            <div>
+              <button class="correct-btn btn">Correct</button>
+              <button class="wrong-btn btn">Wrong</button>
+            </div>
+          </div>
         </div>
-        <button type="button" class="btn" id="start-quiz-btn">
-          Start Quiz
-        </button>
       </section>
     </main>
     <footer><p>© 2024 Quiz App. All rights reserved.</p></footer>
