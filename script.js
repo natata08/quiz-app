@@ -308,10 +308,12 @@ function searchQuestions() {
 
 //entering names
 function checkInputs() {
-  const isInputsFilled = Array.from(playerNameInputs).every(
-    (input) => input.value.trim() !== ''
+  const values = Array.from(playerNameInputs).map((input) =>
+    input.value.trim()
   );
-  startQuizBtn.disabled = !isInputsFilled;
+  const isInputsFilled = values.every((value) => value !== '');
+  const isNameUnique = new Set(values).size === values.length;
+  startQuizBtn.disabled = !(isInputsFilled && isNameUnique);
 }
 
 playerNameInputs.forEach((input) =>
