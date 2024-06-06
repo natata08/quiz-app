@@ -173,7 +173,7 @@ function displayQuestionsList(questions) {
   } else {
     const ul = createQuestionsList(questions);
     questionsList.appendChild(ul);
-    //adding event listeners to buttons Show answer
+
     const buttonsShowAnswer = document.querySelectorAll('.show-correct-btn');
     buttonsShowAnswer.forEach((button) => {
       button.addEventListener('click', showCorrectAnswer);
@@ -189,8 +189,8 @@ function filterQuestions(questions, keyword) {
 
 //submitting a question
 function submitForm(event) {
-  event.preventDefault(); // Prevent form from submitting in default way
-  const answerInputsArray = Array.from(answerInputs); //Array.from for applying .map
+  event.preventDefault();
+  const answerInputsArray = Array.from(answerInputs);
 
   const questionItem = {
     id: quizQuestions.length + 1,
@@ -321,7 +321,32 @@ playerNameInputs.forEach((input) =>
 );
 
 //start game
+const playersData = [];
+
 function startQuiz(event) {
   event.preventDefault();
-  document.querySelector('.game-controller').classList.toggle('hidden');
+
+  Array.from(playerNameInputs).forEach((input) => {
+    const playerData = { playerName: input.value, points: 0 };
+    playersData.push(playerData);
+  });
+  document.querySelector('.player-cards').innerHTML = createPlayerCards();
+  document.querySelector('.player-cards').classList.toggle('hidden');
+}
+
+function createPlayerCards() {
+  const playerCards = playersData
+    .map((playerData) => {
+      const { playerName, points } = playerData;
+      return `<li class="player-card">
+            <h3 class="player-name">${playerName}</h3>
+            <p>Points: <span id="player-points">${points}</span></p>
+            <div>
+              <button class="correct-btn btn">Correct</button>
+              <button class="wrong-btn btn">Wrong</button>
+            </div>
+          </li>`;
+    })
+    .join('');
+  return playerCards;
 }

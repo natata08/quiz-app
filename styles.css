@@ -273,7 +273,7 @@ explanation-container > label,
   margin-bottom: 3rem;
 }
 
-.game-controller {
+.player-cards {
   display: flex;
   align-items: center;
   flex-flow: row wrap;
@@ -281,12 +281,12 @@ explanation-container > label,
 }
 
 @media (max-width: 600px) {
-  .game-controller {
+  .player-cards {
     flex-direction: column;
   }
 }
 
-.player-section {
+.player-card {
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -297,18 +297,18 @@ explanation-container > label,
   border-radius: 1rem;
 }
 
-.player-section .correct-btn,
-.player-section .wrong-btn {
+.player-card .correct-btn,
+.player-card .wrong-btn {
   min-width: 8rem;
   border-radius: 2rem;
 }
 
-.player-section .correct-btn {
+.player-card .correct-btn {
   background-color: var(--color-green);
   color: var(--color-dark-green);
 }
 
-.player-section .wrong-btn {
+.player-card .wrong-btn {
   background-color: var(--color-red);
   color: var(--color-dark-red);
 }
