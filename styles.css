@@ -108,7 +108,6 @@ body {
 }
 
 .btn:hover {
-  background-color: var(--color-button-hover);
   cursor: pointer;
   box-shadow: 0 0.4rem 1.4rem 0 var(--color-shadow);
   transform: translateY(-0.1rem);
@@ -122,7 +121,6 @@ body {
 
 .btn[disabled]:hover {
   cursor: not-allowed;
-  background-color: var(--color-button);
   box-shadow: none;
   transform: none;
 }
@@ -273,12 +271,23 @@ explanation-container > label,
   margin-bottom: 3rem;
 }
 
+.player-cards-container {
+  text-align: center;
+}
+
+.win-message {
+  font-size: 3rem;
+  margin-bottom: 2rem;
+  color: var(--color-button);
+}
+
 .player-cards {
   display: flex;
   align-items: center;
   flex-flow: row wrap;
   justify-content: center;
   gap: 2rem;
+  margin-bottom: 2rem;
 }
 
 @media (max-width: 600px) {

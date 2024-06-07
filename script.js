@@ -113,6 +113,7 @@ const quizQuestions = [
   },
 ];
 const prefixes = ['A', 'B', 'C', 'D'];
+const endGamePoint = 10;
 
 const formEl = document.getElementById('quiz-form');
 const submitBtn = document.getElementById('submit-btn');
@@ -321,7 +322,7 @@ playerNameInputs.forEach((input) =>
 );
 
 //start game
-const playersData = [];
+let playersData = [];
 
 function startQuiz(event) {
   event.preventDefault();
@@ -348,14 +349,18 @@ function startQuiz(event) {
     pointInput.addEventListener('keydown', (event) => {
       event.preventDefault();
     });
-    pointInput.addEventListener('input', getPoints);
+    pointInput.addEventListener('input', handleInputSpinner);
   });
 }
 
-function getPoints() {
+function handleInputSpinner() {
   document.querySelectorAll('.player-points').forEach((pointInput, index) => {
     playersData[index].points = +pointInput.value;
   });
+  if (isWinning()) {
+    document.getElementById('win-sound').play();
+    endGame();
+  }
 }
 
 function createPlayerCards(playersData) {
@@ -392,4 +397,46 @@ function handlePointsBtn(event, isCorrect) {
   document.querySelectorAll('.player-points').forEach((pointInput, index) => {
     pointInput.value = playersData[index].points;
   });
+  if (isWinning()) {
+    document.getElementById('win-sound').play();
+    endGame();
+  }
+}
+
+function isWinning() {
+  return playersData.some(({ points }) => points === endGamePoint);
+}
+
+function endGame() {
+  const winningPlayersData = playersData.find(
+    ({ points }) => points === endGamePoint
+  );
+  const message = document.createElement('p');
+  message.classList.add('win-message');
+  message.innerHTML = `${winningPlayersData.playerName} wins!`;
+
+  document
+    .querySelector('.player-cards-container')
+    .insertBefore(message, document.querySelector('.player-cards'));
+
+  const playAgainBtn = document.createElement('button');
+  playAgainBtn.classList.add('btn', 'reset-btn');
+  playAgainBtn.innerText = 'Play again';
+  document.querySelector('.player-cards-container').appendChild(playAgainBtn);
+  document.querySelector('.reset-btn').addEventListener('click', resetGame);
+
+  document.querySelectorAll('.player-cards .btn').forEach((btn) => {
+    btn.disabled = true;
+  });
+  document.querySelectorAll('.player-points').forEach((pointInput) => {
+    pointInput.disabled = true;
+  });
+}
+
+function resetGame() {
+  playersData = [];
+  playerNameInputs.forEach((input) => {
+    input.value = '';
+  });
+  document.querySelector('.player-cards-container').innerHTML = '';
 }
