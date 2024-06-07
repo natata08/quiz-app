@@ -330,23 +330,53 @@ function startQuiz(event) {
     const playerData = { playerName: input.value, points: 0 };
     playersData.push(playerData);
   });
-  document.querySelector('.player-cards').innerHTML = createPlayerCards();
-  document.querySelector('.player-cards').classList.toggle('hidden');
+  const ul = createPlayerCards(playersData);
+  document.querySelector('.player-cards-container').appendChild(ul);
+
+  document.querySelectorAll('.correct-btn').forEach((correctBtn) => {
+    correctBtn.addEventListener('click', (event) => {
+      handlePointsBtn(event, true);
+    });
+  });
+  document.querySelectorAll('.wrong-btn').forEach((wrongBtn) => {
+    wrongBtn.addEventListener('click', (event) => {
+      handlePointsBtn(event, false);
+    });
+  });
 }
 
-function createPlayerCards() {
+function createPlayerCards(playersData) {
+  const ul = document.createElement('ul');
+  ul.classList.add('player-cards');
   const playerCards = playersData
-    .map((playerData) => {
+    .map((playerData, index) => {
       const { playerName, points } = playerData;
       return `<li class="player-card">
             <h3 class="player-name">${playerName}</h3>
-            <p>Points: <span id="player-points">${points}</span></p>
+            <p>Points: <span class="player-points">${points}</span></p>
             <div>
-              <button class="correct-btn btn">Correct</button>
-              <button class="wrong-btn btn">Wrong</button>
+              <button class="correct-btn btn" data-number="${index}">Correct</button>
+              <button class="wrong-btn btn" data-number="${index}">Wrong</button>
             </div>
           </li>`;
     })
     .join('');
-  return playerCards;
+  ul.innerHTML = playerCards;
+  return ul;
+}
+
+function handlePointsBtn(event, isCorrect) {
+  const targetPlayerNumber = +event.target.dataset.number;
+  if (isCorrect) {
+    playersData[targetPlayerNumber].points += 1;
+  } else {
+    playersData.forEach((playerData, index) => {
+      if (targetPlayerNumber !== index) {
+        playerData.points -= 1;
+      }
+    });
+  }
+  document.querySelectorAll('.player-points').forEach((point, index) => {
+    point.innerHTML = playersData[index].points;
+  });
 }
