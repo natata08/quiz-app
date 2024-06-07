@@ -343,6 +343,19 @@ function startQuiz(event) {
       handlePointsBtn(event, false);
     });
   });
+
+  document.querySelectorAll('.player-points').forEach((pointInput) => {
+    pointInput.addEventListener('keydown', (event) => {
+      event.preventDefault();
+    });
+    pointInput.addEventListener('input', getPoints);
+  });
+}
+
+function getPoints() {
+  document.querySelectorAll('.player-points').forEach((pointInput, index) => {
+    playersData[index].points = +pointInput.value;
+  });
 }
 
 function createPlayerCards(playersData) {
@@ -353,7 +366,7 @@ function createPlayerCards(playersData) {
       const { playerName, points } = playerData;
       return `<li class="player-card">
             <h3 class="player-name">${playerName}</h3>
-            <p>Points: <span class="player-points">${points}</span></p>
+            <p>Points: <input type="number" class="player-points" value="${points}" min="0"></p>
             <div>
               <button class="correct-btn btn" data-number="${index}">Correct</button>
               <button class="wrong-btn btn" data-number="${index}">Wrong</button>
@@ -372,11 +385,11 @@ function handlePointsBtn(event, isCorrect) {
   } else {
     playersData.forEach((playerData, index) => {
       if (targetPlayerNumber !== index) {
-        playerData.points -= 1;
+        playerData.points += 1;
       }
     });
   }
-  document.querySelectorAll('.player-points').forEach((point, index) => {
-    point.innerHTML = playersData[index].points;
+  document.querySelectorAll('.player-points').forEach((pointInput, index) => {
+    pointInput.value = playersData[index].points;
   });
 }
