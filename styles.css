@@ -314,9 +314,10 @@ explanation-container > label,
 }
 
 .player-points {
-  width: 5rem;
-  padding-left: 0.5rem;
+  width: 5.5rem;
+  padding-left: 0.8rem;
   border: 1px solid var(--color-button);
+  font-size: 1.8rem;
 }
 
 .player-card .correct-btn {

@@ -439,4 +439,5 @@ function resetGame() {
     input.value = '';
   });
   document.querySelector('.player-cards-container').innerHTML = '';
+  startQuizBtn.disabled = true;
 }
