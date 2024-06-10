@@ -339,6 +339,9 @@ function startQuiz(event) {
   });
 }
 
+const isWinning = () =>
+  playersData.some(({ points }) => points === endGamePoint);
+
 function handleInputSpinner() {
   document.querySelectorAll('.player-points').forEach((pointInput, index) => {
     playersData[index].points = +pointInput.value;
@@ -387,10 +390,6 @@ function handlePointsBtn(event, isCorrect) {
     document.getElementById('win-sound').play();
     endGame();
   }
-}
-
-function isWinning() {
-  return playersData.some(({ points }) => points === endGamePoint);
 }
 
 function endGame() {
