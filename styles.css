@@ -191,7 +191,8 @@ form {
 .answer {
   width: 50%;
 }
-explanation-container > label,
+
+.explanation-container > label,
 .question-container > label {
   margin-bottom: 0.5rem;
 }
