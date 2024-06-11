@@ -1,117 +1,4 @@
-const quizQuestions = [
-  {
-    id: 1,
-    question: 'Which planet is known as the Red Planet?',
-    answers: [
-      { text: 'Earth', isCorrect: false },
-      { text: 'Mars', isCorrect: true },
-      { text: 'Jupiter', isCorrect: false },
-      { text: 'Saturn', isCorrect: false },
-    ],
-    explanation:
-      'Mars is called the Red Planet because of its reddish appearance.',
-  },
-  {
-    id: 2,
-    question: 'What is the largest ocean on Earth?',
-    answers: [
-      { text: 'Atlantic Ocean', isCorrect: false },
-      { text: 'Indian Ocean', isCorrect: false },
-      { text: 'Pacific Ocean', isCorrect: true },
-      { text: 'Arctic Ocean', isCorrect: false },
-    ],
-    explanation: 'The Pacific Ocean is the largest and deepest ocean on Earth.',
-  },
-  {
-    id: 3,
-    question: "Who wrote 'Romeo and Juliet'?",
-    answers: [
-      { text: 'William Shakespeare', isCorrect: true },
-      { text: 'Mark Twain', isCorrect: false },
-      { text: 'Charles Dickens', isCorrect: false },
-      { text: 'Jane Austen', isCorrect: false },
-    ],
-    explanation: "William Shakespeare wrote the tragedy 'Romeo and Juliet'.",
-  },
-  {
-    id: 4,
-    question: 'What is the hardest natural substance on Earth?',
-    answers: [
-      { text: 'Gold', isCorrect: false },
-      { text: 'Iron', isCorrect: false },
-      { text: 'Diamond', isCorrect: true },
-      { text: 'Silver', isCorrect: false },
-    ],
-    explanation: 'Diamond is the hardest natural substance known to man.',
-  },
-  {
-    id: 5,
-    question: 'In which year did the Titanic sink?',
-    answers: [
-      { text: '1912', isCorrect: true },
-      { text: '1905', isCorrect: false },
-      { text: '1898', isCorrect: false },
-      { text: '1923', isCorrect: false },
-    ],
-    explanation: 'The RMS Titanic sank in 1912 after hitting an iceberg.',
-  },
-  {
-    id: 6,
-    question: 'What is the smallest prime number?',
-    answers: [
-      { text: '1', isCorrect: false },
-      { text: '2', isCorrect: true },
-      { text: '3', isCorrect: false },
-      { text: '5', isCorrect: false },
-    ],
-    explanation: 'The smallest prime number is 2.',
-  },
-  {
-    id: 7,
-    question: 'What is the chemical symbol for gold?',
-    answers: [
-      { text: 'Au', isCorrect: true },
-      { text: 'Ag', isCorrect: false },
-      { text: 'Fe', isCorrect: false },
-      { text: 'Pb', isCorrect: false },
-    ],
-    explanation:
-      "The chemical symbol for gold is Au, derived from its Latin name 'Aurum'.",
-  },
-  {
-    id: 8,
-    question: 'Who developed the theory of relativity?',
-    answers: [
-      { text: 'Isaac Newton', isCorrect: false },
-      { text: 'Nikola Tesla', isCorrect: false },
-      { text: 'Albert Einstein', isCorrect: true },
-      { text: 'Galileo Galilei', isCorrect: false },
-    ],
-    explanation: 'Albert Einstein developed the theory of relativity.',
-  },
-  {
-    id: 9,
-    question: 'What is the main ingredient in traditional Japanese miso soup?',
-    answers: [
-      { text: 'Tofu', isCorrect: false },
-      { text: 'Soybean paste', isCorrect: true },
-      { text: 'Seaweed', isCorrect: false },
-      { text: 'Fish', isCorrect: false },
-    ],
-    explanation: 'The main ingredient in miso soup is soybean paste.',
-  },
-  {
-    id: 10,
-    question: "Which element has the chemical symbol 'O'?",
-    answers: [
-      { text: 'Osmium', isCorrect: false },
-      { text: 'Oxygen', isCorrect: true },
-      { text: 'Oganesson', isCorrect: false },
-      { text: 'Oxium', isCorrect: false },
-    ],
-    explanation: "The chemical symbol 'O' stands for Oxygen.",
-  },
-];
+const quizQuestions = [];
 const prefixes = ['A', 'B', 'C', 'D'];
 const endGamePoint = 10;
 
@@ -122,6 +9,19 @@ const questionsList = document.querySelector('.list-container');
 const searchInput = document.getElementById('search-input');
 const startQuizBtn = document.getElementById('start-quiz-btn');
 const playerNameInputs = document.getElementsByName('player-name');
+
+document.addEventListener('DOMContentLoaded', fetchQuestions);
+
+function fetchQuestions() {
+  fetch(
+    'https://raw.githubusercontent.com/Natata08/Natata08.github.io/main/quiz-data/questions.json'
+  )
+    .then((response) => response.json())
+    .then((questions) => {
+      quizQuestions.push(...questions);
+    })
+    .catch((err) => console.log(err));
+}
 
 document.getElementById('quiz-form').addEventListener('submit', submitForm);
 correctnessInputs.forEach((correctnessInput) => {
