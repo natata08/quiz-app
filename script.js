@@ -144,7 +144,12 @@ function createQuestionsList(questions) {
   const ul = document.createElement('ul');
   ul.innerHTML = questions
     .map(
-      ({ id, question, answers }) => `<li  class="item-answer${id}">
+      ({
+        id,
+        question,
+        answers,
+        explanation,
+      }) => `<li  class="item-answer${id}">
       <h3>Question #${id}. ${question}</h3>
       ${answers
         .map(
@@ -152,6 +157,11 @@ function createQuestionsList(questions) {
             `<p><span class="prefix">${prefixes[index]}</span> ${answer.text}</p>`
         )
         .join('')}
+      <div class="toggle">
+        <div class="triangle" id="explanation-triangle${id}"></div>
+        <p>Show explanation</p>
+      </div>
+      <p class="explanation-text hidden" id="explanation-text${id}">${explanation}</p>
       <button type="button" class="btn show-correct-btn" data-id="${id}">Show answer</button>
     </li>`
     )
@@ -168,9 +178,19 @@ function displayQuestionsList(questions) {
     const ul = createQuestionsList(questions);
     questionsList.appendChild(ul);
 
-    const buttonsShowAnswer = document.querySelectorAll('.show-correct-btn');
-    buttonsShowAnswer.forEach((button) => {
+    document.querySelectorAll('.show-correct-btn').forEach((button) => {
       button.addEventListener('click', showCorrectAnswer);
+    });
+
+    document.querySelectorAll('.toggle').forEach((toggle, index) => {
+      toggle.addEventListener('click', () => {
+        document
+          .getElementById(`explanation-text${index + 1}`)
+          .classList.toggle('hidden');
+        document
+          .getElementById(`explanation-triangle${index + 1}`)
+          .classList.toggle('rotate-up');
+      });
     });
   }
 }
