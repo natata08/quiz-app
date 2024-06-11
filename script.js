@@ -113,29 +113,27 @@ const quizQuestions = [
   },
 ];
 const prefixes = ['A', 'B', 'C', 'D'];
+const endGamePoint = 10;
 
-const formEl = document.getElementById('quiz-form');
-const submitBtn = document.getElementById('submit-btn');
-const randomizeBtn = document.getElementById('randomize-btn');
-const showListBtn = document.getElementById('show-list-btn');
-const searchBtn = document.getElementById('search-btn');
-const questionInput = document.getElementById('question');
-const answerInputs = document.querySelectorAll('.answer'); //get NodeList
-const correctnessInputs = document.getElementsByName('correctAnswer'); //get NodeList
-const explanationInput = document.getElementById('explanation');
+const showQuestionsListBtn = document.getElementById('show-list-btn');
+const answerInputs = document.querySelectorAll('.answer');
+const correctnessInputs = document.getElementsByName('correctAnswer');
 const questionsList = document.querySelector('.list-container');
 const searchInput = document.getElementById('search-input');
+const startQuizBtn = document.getElementById('start-quiz-btn');
+const playerNameInputs = document.getElementsByName('player-name');
 
-//adding event listeners
-formEl.addEventListener('submit', submitForm);
+document.getElementById('quiz-form').addEventListener('submit', submitForm);
 correctnessInputs.forEach((correctnessInput) => {
   correctnessInput.addEventListener('change', handleRadioChange);
 });
-randomizeBtn.addEventListener('click', randomizeAnswers);
-showListBtn.addEventListener('click', showQuestionsList);
+document
+  .getElementById('randomize-btn')
+  .addEventListener('click', randomizeAnswers);
+showQuestionsListBtn.addEventListener('click', showQuestionsList);
+startQuizBtn.addEventListener('click', startQuiz);
 
-//helper function
-function getMessage(message) {
+function createMessage(message) {
   const messageEl = document.createElement('p');
   messageEl.innerText = message;
   messageEl.classList.add('message');
@@ -144,10 +142,14 @@ function getMessage(message) {
 
 function createQuestionsList(questions) {
   const ul = document.createElement('ul');
-  let output = '';
-  questions.map((item) => {
-    const { id, question, answers } = item;
-    output += `<li  class="item-answer${id}">
+  ul.innerHTML = questions
+    .map(
+      ({
+        id,
+        question,
+        answers,
+        explanation,
+      }) => `<li  class="item-answer${id}">
       <h3>Question #${id}. ${question}</h3>
       ${answers
         .map(
@@ -155,25 +157,40 @@ function createQuestionsList(questions) {
             `<p><span class="prefix">${prefixes[index]}</span> ${answer.text}</p>`
         )
         .join('')}
+      <div class="toggle">
+        <div class="triangle" id="explanation-triangle${id}"></div>
+        <p>Show explanation</p>
+      </div>
+      <p class="explanation-text hidden" id="explanation-text${id}">${explanation}</p>
       <button type="button" class="btn show-correct-btn" data-id="${id}">Show answer</button>
-    </li>`;
-  });
-  ul.innerHTML = output;
+    </li>`
+    )
+    .join('');
   return ul;
 }
 
 function displayQuestionsList(questions) {
   questionsList.innerHTML = '';
   if (questions.length === 0) {
-    const message = getMessage('There are no questions.');
+    const message = createMessage('There are no questions.');
     questionsList.appendChild(message);
   } else {
     const ul = createQuestionsList(questions);
     questionsList.appendChild(ul);
-    //adding event listeners to buttons Show answer
-    const buttonsShowAnswer = document.querySelectorAll('.show-correct-btn');
-    buttonsShowAnswer.forEach((button) => {
+
+    document.querySelectorAll('.show-correct-btn').forEach((button) => {
       button.addEventListener('click', showCorrectAnswer);
+    });
+
+    document.querySelectorAll('.toggle').forEach((toggle, index) => {
+      toggle.addEventListener('click', () => {
+        document
+          .getElementById(`explanation-text${index + 1}`)
+          .classList.toggle('hidden');
+        document
+          .getElementById(`explanation-triangle${index + 1}`)
+          .classList.toggle('rotate-up');
+      });
     });
   }
 }
@@ -184,10 +201,11 @@ function filterQuestions(questions, keyword) {
   );
 }
 
-//submitting a question
 function submitForm(event) {
-  event.preventDefault(); // Prevent form from submitting in default way
-  const answerInputsArray = Array.from(answerInputs); //Array.from for applying .map
+  event.preventDefault();
+  const questionInput = document.getElementById('question');
+  const answerInputsArray = Array.from(answerInputs);
+  const explanationInput = document.getElementById('explanation');
 
   const questionItem = {
     id: quizQuestions.length + 1,
@@ -200,21 +218,18 @@ function submitForm(event) {
   };
   quizQuestions.push(questionItem);
 
-  // Clear the form (text and color)
   event.target.reset();
   for (const answerInput of answerInputs) {
     answerInput.classList.remove('wrong-answer', 'correct-answer');
   }
 
-  //add message of submitting successfully
-  const message = getMessage('Question submitted successfully!');
+  const message = createMessage('Question submitted successfully!');
   document.querySelector('.question-input').appendChild(message);
   setTimeout(() => {
     message.remove();
   }, '3000');
 }
 
-// changing color for the "correct" and ""wrong" answers
 function handleRadioChange() {
   answerInputs.forEach((answerInput, index) => {
     if (correctnessInputs[index].checked) {
@@ -227,7 +242,6 @@ function handleRadioChange() {
   });
 }
 
-// randomizing the order of the 4 option inputs
 function randomizeAnswers() {
   //getting an array: [['sth', false], ['sth', false], ['sth', true],['sth', false]]
   const answersAndCorrectness = Array.from(answerInputs).map(
@@ -245,33 +259,31 @@ function randomizeAnswers() {
     handleRadioChange();
 }
 
-//showing a list of all quiz questions added to the array
 function showQuestionsList() {
   document.querySelector('.question-list').classList.toggle('hidden');
   if (questionsList.innerHTML === '') {
     displayQuestionsList(quizQuestions);
-    showListBtn.innerText = 'Hide questions';
+    showQuestionsListBtn.innerText = 'Hide questions';
   } else {
     questionsList.innerHTML = '';
-    showListBtn.innerText = 'Show questions';
+    showQuestionsListBtn.innerText = 'Show questions';
   }
 }
 
-//showing correct answer
 function showCorrectAnswer(event) {
   const clickedBtn = event.target;
-  //changing the button text
+
   if (clickedBtn.innerText.toLowerCase() === 'show answer') {
     clickedBtn.innerText = 'Hide answer';
   } else {
     clickedBtn.innerText = 'Show answer';
   }
-  //finding target question
+
   const targetQuestionId = +clickedBtn.dataset.id;
   const targetQuestion = quizQuestions.find(
     (question) => question.id === targetQuestionId
   );
-  //adding or removing class to paragraph of correct answer
+
   targetQuestion.answers.forEach((answer, index) => {
     if (answer.isCorrect) {
       const correctAnswer = document
@@ -282,7 +294,6 @@ function showCorrectAnswer(event) {
   });
 }
 
-// filtering the questions by searching the content of the question
 const debounce = (fn, delay = 1000) => {
   let timerId = null;
   return (...args) => {
@@ -301,4 +312,136 @@ function searchQuestions() {
   const keyword = searchInput.value;
   const filteredQuestions = filterQuestions(quizQuestions, keyword);
   displayQuestionsList(filteredQuestions);
+}
+
+function checkInputs() {
+  const values = Array.from(playerNameInputs).map((input) =>
+    input.value.trim()
+  );
+  const isInputsFilled = values.every((value) => value !== '');
+  const isNameUnique = new Set(values).size === values.length;
+  startQuizBtn.disabled = !(isInputsFilled && isNameUnique);
+}
+
+playerNameInputs.forEach((input) =>
+  input.addEventListener('input', checkInputs)
+);
+
+let playersData = [];
+
+function startQuiz(event) {
+  event.preventDefault();
+  startQuizBtn.disabled = true;
+  playersData = Array.from(playerNameInputs).map((input) => ({
+    playerName: input.value,
+    points: 0,
+  }));
+
+  const ul = createPlayerCards(playersData);
+  document.querySelector('.player-cards-container').appendChild(ul);
+
+  document.querySelectorAll('.correct-btn').forEach((correctBtn) => {
+    correctBtn.addEventListener('click', (event) => {
+      handlePointsBtn(event, true);
+    });
+  });
+  document.querySelectorAll('.wrong-btn').forEach((wrongBtn) => {
+    wrongBtn.addEventListener('click', (event) => {
+      handlePointsBtn(event, false);
+    });
+  });
+
+  document.querySelectorAll('.player-points').forEach((pointInput) => {
+    pointInput.addEventListener('keydown', (event) => {
+      event.preventDefault();
+    });
+    pointInput.addEventListener('input', handleInputSpinner);
+  });
+}
+
+const isWinning = () =>
+  playersData.some(({ points }) => points === endGamePoint);
+
+function handleInputSpinner() {
+  document.querySelectorAll('.player-points').forEach((pointInput, index) => {
+    playersData[index].points = +pointInput.value;
+  });
+  if (isWinning()) {
+    document.getElementById('win-sound').play();
+    endGame();
+  }
+}
+
+function createPlayerCards(playersData) {
+  const ul = document.createElement('ul');
+  ul.classList.add('player-cards');
+  const playerCards = playersData
+    .map((playerData, index) => {
+      const { playerName, points } = playerData;
+      return `<li class="player-card">
+            <h3 class="player-name">${playerName}</h3>
+            <label>Points: <input type="number" class="player-points" value="${points}" min="0" name="player-points"></label>
+            <div>
+              <button class="correct-btn btn" data-number="${index}">Correct</button>
+              <button class="wrong-btn btn" data-number="${index}">Wrong</button>
+            </div>
+          </li>`;
+    })
+    .join('');
+  ul.innerHTML = playerCards;
+  return ul;
+}
+
+function handlePointsBtn(event, isCorrect) {
+  const targetPlayerNumber = +event.target.dataset.number;
+  if (isCorrect) {
+    playersData[targetPlayerNumber].points += 1;
+  } else {
+    playersData.forEach((playerData, index) => {
+      if (targetPlayerNumber !== index) {
+        playerData.points += 1;
+      }
+    });
+  }
+  document.querySelectorAll('.player-points').forEach((pointInput, index) => {
+    pointInput.value = playersData[index].points;
+  });
+  if (isWinning()) {
+    document.getElementById('win-sound').play();
+    endGame();
+  }
+}
+
+function endGame() {
+  const winningPlayersData = playersData.find(
+    ({ points }) => points === endGamePoint
+  );
+  const message = document.createElement('p');
+  message.classList.add('win-message');
+  message.innerHTML = `${winningPlayersData.playerName} wins!`;
+
+  document
+    .querySelector('.player-cards-container')
+    .insertBefore(message, document.querySelector('.player-cards'));
+
+  const playAgainBtn = document.createElement('button');
+  playAgainBtn.classList.add('btn', 'reset-btn');
+  playAgainBtn.innerText = 'Play again';
+  document.querySelector('.player-cards-container').appendChild(playAgainBtn);
+  document.querySelector('.reset-btn').addEventListener('click', resetGame);
+
+  document.querySelectorAll('.player-cards .btn').forEach((btn) => {
+    btn.disabled = true;
+  });
+  document.querySelectorAll('.player-points').forEach((pointInput) => {
+    pointInput.disabled = true;
+  });
+}
+
+function resetGame() {
+  playersData = [];
+  playerNameInputs.forEach((input) => {
+    input.value = '';
+  });
+  document.querySelector('.player-cards-container').innerHTML = '';
 }

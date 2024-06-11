@@ -10,6 +10,7 @@
   --color-red: #fe605554;
   --color-green: #c7efcf83;
   --color-dark-green: #2b9240;
+  --color-dark-red: #9f180e;
 }
 
 /* Base CSS reset */
@@ -76,6 +77,18 @@ html {
   font-size: 62.5%; /* 10px */
 }
 
+@media (max-width: 1000px) {
+  html {
+    font-size: 60%;
+  }
+}
+
+@media (max-width: 600px) {
+  html {
+    font-size: 55%;
+  }
+}
+
 body {
   font-family: var(--font-primary);
   background-color: var(--background-color-primary);
@@ -95,21 +108,32 @@ body {
 }
 
 .btn:hover {
-  background-color: var(--color-button-hover);
   cursor: pointer;
   box-shadow: 0 0.4rem 1.4rem 0 var(--color-shadow);
   transform: translateY(-0.1rem);
   transition: transform 150ms;
 }
 
+.btn[disabled] {
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+.btn[disabled]:hover {
+  cursor: not-allowed;
+  box-shadow: none;
+  transform: none;
+}
+
 main {
-  font-size: 1.4rem;
+  font-size: 1.8rem;
   display: flex;
   flex-direction: column;
   align-items: center;
-  max-width: 80%;
+  max-width: 90%;
   margin: 0 auto;
   margin-top: 2rem;
+  margin-bottom: 6rem;
   gap: 2rem;
 }
 
@@ -123,10 +147,6 @@ h1 {
   color: var(--color-secondary);
 }
 
-h2 {
-  margin-bottom: 2rem;
-}
-
 input[type='text'],
 input[type='search'] {
   padding: 0.5rem 0.7rem;
@@ -134,11 +154,13 @@ input[type='search'] {
 }
 
 .question-input,
-.question-list {
+.question-list,
+.game {
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-bottom: 8rem;
+  gap: 2rem;
+  margin-bottom: 3rem;
 }
 
 /* question-input */
@@ -146,7 +168,7 @@ form {
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
-  width: 40rem;
+  min-width: 40rem;
 }
 
 .question-container,
@@ -169,7 +191,8 @@ form {
 .answer {
   width: 50%;
 }
-explanation-container > label,
+
+.explanation-container > label,
 .question-container > label {
   margin-bottom: 0.5rem;
 }
@@ -189,10 +212,6 @@ explanation-container > label,
   background-color: var(--color-green);
 }
 
-.message {
-  margin-top: 2rem;
-}
-
 /* question-list */
 .question-list ul {
   display: flex;
@@ -203,7 +222,7 @@ explanation-container > label,
 
 .question-list li {
   list-style-type: none;
-  flex: 0 0 38rem;
+  flex: 0 1 40rem;
 }
 
 .question-list h3 {
@@ -225,8 +244,40 @@ explanation-container > label,
   border-radius: 50%;
 }
 
+.triangle {
+  width: 0;
+  height: 0;
+  border-top: 0.5rem solid transparent;
+  border-bottom: 0.5rem solid transparent;
+  border-left: 1rem solid var(--color-primary);
+  transition: transform 0.3s ease;
+  cursor: pointer;
+}
+
+.rotate-up {
+  transform: rotate(90deg);
+}
+
+.toggle {
+  display: flex;
+  align-items: baseline;
+  gap: 0.8rem;
+  margin-left: 0.6rem;
+  margin-top: 1.5rem;
+}
+
+.toggle p {
+  font-size: 1.2rem;
+  text-transform: uppercase;
+  font-weight: bold;
+}
+
+.explanation-text {
+  font-size: 1.5rem;
+}
+
 .question-list .btn {
-  margin-top: 0.5rem;
+  margin-top: 0.7rem;
   font-size: 0.8rem;
   min-width: 9rem;
   height: 3rem;
@@ -240,8 +291,76 @@ explanation-container > label,
 
 /* search */
 #search-input {
-  margin-bottom: 2rem;
   padding-left: 0.7rem;
+}
+
+/* game */
+
+.game-intro {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2rem;
+  margin-bottom: 3rem;
+}
+
+.player-cards-container {
+  text-align: center;
+}
+
+.win-message {
+  font-size: 3rem;
+  margin-bottom: 2rem;
+  color: var(--color-button);
+}
+
+.player-cards {
+  display: flex;
+  align-items: center;
+  flex-flow: row wrap;
+  justify-content: center;
+  gap: 2rem;
+  margin-bottom: 2rem;
+}
+
+@media (max-width: 600px) {
+  .player-cards {
+    flex-direction: column;
+  }
+}
+
+.player-card {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 2rem;
+  padding: 1.5rem;
+  border: 0.1rem solid var(--color-button);
+  border-radius: 1rem;
+}
+
+.player-card .correct-btn,
+.player-card .wrong-btn {
+  min-width: 8rem;
+  border-radius: 2rem;
+}
+
+.player-points {
+  width: 5.5rem;
+  padding-left: 0.8rem;
+  border: 1px solid var(--color-button);
+  font-size: 1.8rem;
+}
+
+.player-card .correct-btn {
+  background-color: var(--color-green);
+  color: var(--color-dark-green);
+}
+
+.player-card .wrong-btn {
+  background-color: var(--color-red);
+  color: var(--color-dark-red);
 }
 
 /* footer */
