@@ -33,6 +33,10 @@ document
 showQuestionsListBtn.addEventListener('click', showQuestionsList);
 startQuizBtn.addEventListener('click', startQuiz);
 
+document
+  .getElementById('sort-select')
+  .addEventListener('change', sortQuestions);
+
 function createMessage(message) {
   const messageEl = document.createElement('p');
   messageEl.innerText = message;
@@ -44,13 +48,11 @@ function createQuestionsList(questions) {
   const ul = document.createElement('ul');
   ul.innerHTML = questions
     .map(
-      ({
-        id,
-        question,
-        answers,
-        explanation,
-      }) => `<li  class="item-answer${id}">
-      <h3>Question #${id}. ${question}</h3>
+      (
+        { id, question, answers, explanation },
+        index
+      ) => `<li  class="item-answer${id}">
+      <h3>#${index + 1}. ${question}</h3>
       ${answers
         .map(
           (answer, index) =>
@@ -344,4 +346,31 @@ function resetGame() {
     input.value = '';
   });
   document.querySelector('.player-cards-container').innerHTML = '';
+}
+
+const sortAlphabetically = (questions) => {
+  return [...questions].sort((a, b) => {
+    const questionA = a.question.toLowerCase();
+    const questionB = b.question.toLowerCase();
+
+    if (questionA < questionB) {
+      return -1;
+    }
+    if (questionA > questionB) {
+      return 1;
+    }
+    return 0;
+  });
+};
+
+const sortRandomly = (questions) =>
+  [...questions].sort(() => Math.random() - 0.5);
+
+function sortQuestions() {
+  const sortType = document.getElementById('sort-select').value;
+  const sortedQuestions =
+    sortType === 'alphabetical'
+      ? sortAlphabetically(quizQuestions)
+      : sortRandomly(quizQuestions);
+  displayQuestionsList(sortedQuestions);
 }
