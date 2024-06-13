@@ -121,11 +121,26 @@
 
       <section class="question-list hidden">
         <h2>List of questions</h2>
-        <input
-          type="search"
-          id="search-input"
-          placeholder="Search for questions"
-        />
+        <div class="search-sort-container">
+          <div>
+            <label class="hidden" for="search-input"
+              >Search for questions</label
+            >
+            <input
+              type="search"
+              id="search-input"
+              placeholder="Search for questions"
+            />
+          </div>
+          <div>
+            <label for="sort-select">Sort by:</label>
+            <select id="sort-select" name="sort-select">
+              <option value="alphabetical">alphabetical</option>
+              <option value="random">random</option>
+            </select>
+          </div>
+        </div>
+
         <div class="list-container"></div>
       </section>
       <section class="game">
