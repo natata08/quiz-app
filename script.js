@@ -12,15 +12,16 @@ const playerNameInputs = document.getElementsByName('player-name');
 
 document.addEventListener('DOMContentLoaded', fetchQuestions);
 
-function fetchQuestions() {
-  fetch(
-    'https://raw.githubusercontent.com/Natata08/Natata08.github.io/main/quiz-data/questions.json'
-  )
-    .then((response) => response.json())
-    .then((questions) => {
-      quizQuestions.push(...questions);
-    })
-    .catch((err) => console.log(err));
+async function fetchQuestions() {
+  try {
+    const response = await fetch(
+      'https://raw.githubusercontent.com/Natata08/Natata08.github.io/main/quiz-data/questions.json'
+    );
+    const data = await response.json();
+    quizQuestions.push(...data);
+  } catch (error) {
+    console.error(error);
+  }
 }
 
 document.getElementById('quiz-form').addEventListener('submit', submitForm);
