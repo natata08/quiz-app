@@ -1,6 +1,7 @@
 const quizQuestions = [];
 const prefixes = ['A', 'B', 'C', 'D'];
 const endGamePoint = 10;
+let isQuestionListVisible = false;
 
 const showQuestionsListBtn = document.getElementById('show-list-btn');
 const answerInputs = document.querySelectorAll('.answer');
@@ -62,7 +63,7 @@ function createQuestionsList(questions) {
         .join('')}
       <div class="toggle" id="toggle${id}">
         <div class="triangle" id="explanation-triangle${id}"></div>
-        <p>Show explanation</p>
+        <p>Explanation</p>
       </div>
       <p class="explanation-text hidden" id="explanation-text${id}">${explanation}</p>
       <button type="button" class="btn show-correct-btn" data-id="${id}">Show answer</button>
@@ -129,6 +130,10 @@ function submitForm(event) {
     answerInput.classList.remove('wrong-answer', 'correct-answer');
   }
 
+  if (isQuestionListVisible) {
+    showQuestionsList();
+  }
+
   const message = createMessage('Question submitted successfully!');
   document.querySelector('.question-input').appendChild(message);
   setTimeout(() => {
@@ -166,24 +171,23 @@ function randomizeAnswers() {
 }
 
 function showQuestionsList() {
+  isQuestionListVisible = !isQuestionListVisible;
   document.querySelector('.question-list').classList.toggle('hidden');
-  if (questionsList.innerHTML === '') {
+  if (isQuestionListVisible) {
     displayQuestionsList(quizQuestions);
-    showQuestionsListBtn.innerText = 'Hide questions';
   } else {
     questionsList.innerHTML = '';
-    showQuestionsListBtn.innerText = 'Show questions';
   }
+  showQuestionsListBtn.innerText = isQuestionListVisible
+    ? 'Hide questions'
+    : 'Show questions';
 }
 
 function showCorrectAnswer(event) {
   const clickedBtn = event.target;
-
-  if (clickedBtn.innerText.toLowerCase() === 'show answer') {
-    clickedBtn.innerText = 'Hide answer';
-  } else {
-    clickedBtn.innerText = 'Show answer';
-  }
+  const currentInnerText = clickedBtn.innerText.toLowerCase();
+  clickedBtn.innerText =
+    currentInnerText === 'show answer' ? 'Hide answer' : 'Show answer';
 
   const targetQuestionId = +clickedBtn.dataset.id;
   const targetQuestion = quizQuestions.find(
