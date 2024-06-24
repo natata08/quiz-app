@@ -7,6 +7,7 @@
   --color-button: #004e92;
   --color-button-hover: #06106a;
   --color-shadow: rgba(22, 57, 232, 0.5);
+  --color-shadow-secondary: rgba(0, 0, 0, 0.46);
   --color-red: #fe605554;
   --color-green: #c7efcf83;
   --color-dark-green: #2b9240;
@@ -185,7 +186,7 @@ form {
 .answer-container {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: 1rem;
 }
 
 .answer {
@@ -236,13 +237,17 @@ form {
 .question-list ul {
   display: flex;
   flex-flow: row wrap;
-  gap: 1.5rem;
+  gap: 2rem;
   justify-content: space-around;
 }
 
 .question-list li {
   list-style-type: none;
   flex: 0 1 40rem;
+  background-color: var(--color-secondary);
+  padding: 2rem;
+  border-radius: 2rem;
+  box-shadow: 0.1rem 0.4rem 1.4rem 0 var(--color-shadow-secondary);
 }
 
 .question-list h3 {
@@ -352,14 +357,14 @@ form {
   min-height: 25rem;
   gap: 2rem;
   padding: 1.5rem;
-  border: 0.1rem solid var(--color-button);
-  border-radius: 1rem;
+  background-color: var(--color-secondary);
+  border-radius: 2rem;
+  box-shadow: 0.1rem 0.4rem 1.4rem 0 var(--color-shadow-secondary);
 }
 
 .player-card .correct-btn,
 .player-card .wrong-btn {
   min-width: 10rem;
-  border-radius: 2rem;
 }
 
 .player-points {
@@ -367,6 +372,10 @@ form {
   padding-left: 0.8rem;
   border: 1px solid var(--color-button);
   font-size: 1.8rem;
+}
+.player-card div {
+  display: flex;
+  gap: 2rem;
 }
 
 .player-card .correct-btn {
