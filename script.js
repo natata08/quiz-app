@@ -60,7 +60,7 @@ function createQuestionsList(questions) {
             `<p><span class="prefix">${prefixes[index]}</span> ${answer.text}</p>`
         )
         .join('')}
-      <div class="toggle">
+      <div class="toggle" id="toggle${id}">
         <div class="triangle" id="explanation-triangle${id}"></div>
         <p>Show explanation</p>
       </div>
@@ -85,17 +85,20 @@ function displayQuestionsList(questions) {
       button.addEventListener('click', showCorrectAnswer);
     });
 
-    document.querySelectorAll('.toggle').forEach((toggle, index) => {
-      toggle.addEventListener('click', () => {
-        document
-          .getElementById(`explanation-text${index + 1}`)
-          .classList.toggle('hidden');
-        document
-          .getElementById(`explanation-triangle${index + 1}`)
-          .classList.toggle('rotate-up');
-      });
+    document.querySelectorAll('.toggle').forEach((toggle) => {
+      toggle.addEventListener('click', handleToggleShowExplanation);
     });
   }
+}
+
+function handleToggleShowExplanation(event) {
+  const toggleId = event.currentTarget.id.split('toggle')[1];
+  document
+    .getElementById(`explanation-text${toggleId}`)
+    .classList.toggle('hidden');
+  document
+    .getElementById(`explanation-triangle${toggleId}`)
+    .classList.toggle('rotate-up');
 }
 
 function filterQuestions(questions, keyword) {
@@ -199,9 +202,9 @@ function showCorrectAnswer(event) {
 
 const debounce = (fn, delay = 1000) => {
   let timerId = null;
-  return (...args) => {
+  return () => {
     clearTimeout(timerId);
-    timerId = setTimeout(() => fn(...args), delay);
+    timerId = setTimeout(() => fn(), delay);
   };
 };
 
@@ -373,5 +376,7 @@ function sortQuestions() {
     sortType === 'alphabetical'
       ? sortAlphabetically(quizQuestions)
       : sortRandomly(quizQuestions);
+  console.log(quizQuestions);
+  console.log(sortedQuestions);
   displayQuestionsList(sortedQuestions);
 }
