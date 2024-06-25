@@ -90,6 +90,12 @@ html {
   }
 }
 
+@media (max-width: 350px) {
+  html {
+    font-size: 40%;
+  }
+}
+
 body {
   font-family: var(--font-primary);
   background-color: var(--background-color-primary);

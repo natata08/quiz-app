@@ -270,8 +270,6 @@ function sortQuestions() {
     sortType === 'alphabetical'
       ? sortAlphabetically(quizQuestions)
       : sortRandomly(quizQuestions);
-  console.log(quizQuestions);
-  console.log(sortedQuestions);
   displayQuestionsList(sortedQuestions);
 }
 
