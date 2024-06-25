@@ -46,6 +46,14 @@ const filterQuestions = (questions, keyword) =>
     question.question.toLowerCase().includes(keyword.toLowerCase().trim())
   );
 
+const displayTemporaryMessage = (parentEl, message) => {
+  const messageEl = createMessage(message);
+  parentEl.appendChild(messageEl);
+  setTimeout(() => {
+    messageEl.remove();
+  }, '3000');
+};
+
 async function fetchQuestions() {
   try {
     const response = await fetch(
@@ -62,14 +70,22 @@ async function fetchQuestions() {
 function submitForm(event) {
   event.preventDefault();
   const questionInput = document.getElementById('question');
-  const answerInputsArray = Array.from(answerInputs);
   const explanationInput = document.getElementById('explanation');
+  const addQuestionSection = document.querySelector('.add-question-section');
 
+  const answers = [...answerInputs].map((input) => input.value.trim());
+  if (!areValuesUnique(answers)) {
+    displayTemporaryMessage(
+      addQuestionSection,
+      'Please ensure all answers are unique.'
+    );
+    return;
+  }
   const questionItem = {
     id: quizQuestions.length + 1,
     question: questionInput.value,
-    answers: answerInputsArray.map((answer, index) => ({
-      text: answer.value,
+    answers: answers.map((answer, index) => ({
+      text: answer,
       isCorrect: correctnessInputs[index].checked,
     })),
     explanation: explanationInput.value,
@@ -84,12 +100,10 @@ function submitForm(event) {
   if (isQuestionListVisible) {
     showQuestionsList();
   }
-
-  const message = createMessage('Question submitted successfully!');
-  document.querySelector('.question-input').appendChild(message);
-  setTimeout(() => {
-    message.remove();
-  }, '3000');
+  displayTemporaryMessage(
+    addQuestionSection,
+    'Question submitted successfully!'
+  );
 }
 
 function handleRadioChange() {

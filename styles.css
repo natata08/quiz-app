@@ -154,7 +154,7 @@ input[type='search'] {
   border: 1px solid var(--color-button);
 }
 
-.question-input,
+.add-question-section,
 .question-list,
 .game {
   display: flex;
@@ -164,7 +164,7 @@ input[type='search'] {
   margin-bottom: 3rem;
 }
 
-/* question-input */
+/* add-question-section */
 form {
   display: flex;
   flex-direction: column;
