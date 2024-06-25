@@ -10,8 +10,41 @@ const questionsList = document.querySelector('.list-container');
 const searchInput = document.getElementById('search-input');
 const startQuizBtn = document.getElementById('start-quiz-btn');
 const playerNameInputs = document.getElementsByName('player-name');
+const playerCardsContainer = document.querySelector('.player-cards-container');
 
 document.addEventListener('DOMContentLoaded', fetchQuestions);
+document.getElementById('quiz-form').addEventListener('submit', submitForm);
+correctnessInputs.forEach((correctnessInput) => {
+  correctnessInput.addEventListener('change', handleRadioChange);
+});
+document
+  .getElementById('randomize-btn')
+  .addEventListener('click', randomizeAnswers);
+showQuestionsListBtn.addEventListener('click', showQuestionsList);
+document
+  .getElementById('sort-select')
+  .addEventListener('change', sortQuestions);
+document.getElementById('game-intro').addEventListener('submit', startQuiz);
+playerNameInputs.forEach((playerNameInput) => {
+  playerNameInput.addEventListener('input', handlePlayerNameInput);
+});
+
+function createMessage(message) {
+  const messageEl = document.createElement('p');
+  messageEl.innerText = message;
+  messageEl.classList.add('message');
+  return messageEl;
+}
+
+const areValuesUnique = (inputArray) => {
+  const uniqueValues = new Set(inputArray);
+  return uniqueValues.size === inputArray.length;
+};
+
+const filterQuestions = (questions, keyword) =>
+  questions.filter((question) =>
+    question.question.toLowerCase().includes(keyword.toLowerCase().trim())
+  );
 
 async function fetchQuestions() {
   try {
@@ -25,89 +58,7 @@ async function fetchQuestions() {
   }
 }
 
-document.getElementById('quiz-form').addEventListener('submit', submitForm);
-correctnessInputs.forEach((correctnessInput) => {
-  correctnessInput.addEventListener('change', handleRadioChange);
-});
-document
-  .getElementById('randomize-btn')
-  .addEventListener('click', randomizeAnswers);
-showQuestionsListBtn.addEventListener('click', showQuestionsList);
-startQuizBtn.addEventListener('click', startQuiz);
-
-document
-  .getElementById('sort-select')
-  .addEventListener('change', sortQuestions);
-
-function createMessage(message) {
-  const messageEl = document.createElement('p');
-  messageEl.innerText = message;
-  messageEl.classList.add('message');
-  return messageEl;
-}
-
-function createQuestionsList(questions) {
-  const ul = document.createElement('ul');
-  ul.innerHTML = questions
-    .map(
-      (
-        { id, question, answers, explanation },
-        index
-      ) => `<li  class="item-answer${id}">
-      <h3>#${index + 1}. ${question}</h3>
-      ${answers
-        .map(
-          (answer, index) =>
-            `<p><span class="prefix">${prefixes[index]}</span> ${answer.text}</p>`
-        )
-        .join('')}
-      <div class="toggle" id="toggle${id}">
-        <div class="triangle" id="explanation-triangle${id}"></div>
-        <p>Explanation</p>
-      </div>
-      <p class="explanation-text hidden" id="explanation-text${id}">${explanation}</p>
-      <button type="button" class="btn show-correct-btn" data-id="${id}">Show answer</button>
-    </li>`
-    )
-    .join('');
-  return ul;
-}
-
-function displayQuestionsList(questions) {
-  questionsList.innerHTML = '';
-  if (questions.length === 0) {
-    const message = createMessage('There are no questions.');
-    questionsList.appendChild(message);
-  } else {
-    const ul = createQuestionsList(questions);
-    questionsList.appendChild(ul);
-
-    document.querySelectorAll('.show-correct-btn').forEach((button) => {
-      button.addEventListener('click', showCorrectAnswer);
-    });
-
-    document.querySelectorAll('.toggle').forEach((toggle) => {
-      toggle.addEventListener('click', handleToggleShowExplanation);
-    });
-  }
-}
-
-function handleToggleShowExplanation(event) {
-  const toggleId = event.currentTarget.id.split('toggle')[1];
-  document
-    .getElementById(`explanation-text${toggleId}`)
-    .classList.toggle('hidden');
-  document
-    .getElementById(`explanation-triangle${toggleId}`)
-    .classList.toggle('rotate-up');
-}
-
-function filterQuestions(questions, keyword) {
-  return questions.filter((question) =>
-    question.question.toLowerCase().includes(keyword.toLowerCase().trim())
-  );
-}
-
+//submitting a question
 function submitForm(event) {
   event.preventDefault();
   const questionInput = document.getElementById('question');
@@ -170,6 +121,63 @@ function randomizeAnswers() {
     handleRadioChange();
 }
 
+//question list
+function createQuestionsList(questions) {
+  const ul = document.createElement('ul');
+  ul.innerHTML = questions
+    .map(
+      (
+        { id, question, answers, explanation },
+        index
+      ) => `<li  class="item-answer${id}">
+      <h3>#${index + 1}. ${question}</h3>
+      ${answers
+        .map(
+          (answer, index) =>
+            `<p><span class="prefix">${prefixes[index]}</span> ${answer.text}</p>`
+        )
+        .join('')}
+      <div class="toggle" id="toggle${id}">
+        <div class="triangle" id="explanation-triangle${id}"></div>
+        <p>Explanation</p>
+      </div>
+      <p class="explanation-text hidden" id="explanation-text${id}">${explanation}</p>
+      <button type="button" class="btn show-correct-btn" data-id="${id}">Show answer</button>
+    </li>`
+    )
+    .join('');
+  return ul;
+}
+
+function displayQuestionsList(questions) {
+  questionsList.innerHTML = '';
+  if (questions.length === 0) {
+    const message = createMessage('There are no questions.');
+    questionsList.appendChild(message);
+  } else {
+    const ul = createQuestionsList(questions);
+    questionsList.appendChild(ul);
+
+    document.querySelectorAll('.show-correct-btn').forEach((button) => {
+      button.addEventListener('click', showCorrectAnswer);
+    });
+
+    document.querySelectorAll('.toggle').forEach((toggle) => {
+      toggle.addEventListener('click', handleToggleShowExplanation);
+    });
+  }
+}
+
+function handleToggleShowExplanation(event) {
+  const toggleId = event.currentTarget.id.split('toggle')[1];
+  document
+    .getElementById(`explanation-text${toggleId}`)
+    .classList.toggle('hidden');
+  document
+    .getElementById(`explanation-triangle${toggleId}`)
+    .classList.toggle('rotate-up');
+}
+
 function showQuestionsList() {
   isQuestionListVisible = !isQuestionListVisible;
   document.querySelector('.question-list').classList.toggle('hidden');
@@ -204,6 +212,7 @@ function showCorrectAnswer(event) {
   });
 }
 
+//search
 const debounce = (fn, delay = 1000) => {
   let timerId = null;
   return () => {
@@ -224,138 +233,7 @@ function searchQuestions() {
   displayQuestionsList(filteredQuestions);
 }
 
-function checkInputs() {
-  const values = Array.from(playerNameInputs).map((input) =>
-    input.value.trim()
-  );
-  const isInputsFilled = values.every((value) => value !== '');
-  const isNameUnique = new Set(values).size === values.length;
-  startQuizBtn.disabled = !(isInputsFilled && isNameUnique);
-}
-
-playerNameInputs.forEach((input) =>
-  input.addEventListener('input', checkInputs)
-);
-
-let playersData = [];
-
-function startQuiz(event) {
-  event.preventDefault();
-  startQuizBtn.disabled = true;
-  playersData = Array.from(playerNameInputs).map((input) => ({
-    playerName: input.value,
-    points: 0,
-  }));
-
-  const ul = createPlayerCards(playersData);
-  document.querySelector('.player-cards-container').appendChild(ul);
-
-  document.querySelectorAll('.correct-btn').forEach((correctBtn) => {
-    correctBtn.addEventListener('click', (event) => {
-      handlePointsBtn(event, true);
-    });
-  });
-  document.querySelectorAll('.wrong-btn').forEach((wrongBtn) => {
-    wrongBtn.addEventListener('click', (event) => {
-      handlePointsBtn(event, false);
-    });
-  });
-
-  document.querySelectorAll('.player-points').forEach((pointInput) => {
-    pointInput.addEventListener('keydown', (event) => {
-      event.preventDefault();
-    });
-    pointInput.addEventListener('input', handleInputSpinner);
-  });
-}
-
-const isWinning = () =>
-  playersData.some(({ points }) => points === endGamePoint);
-
-function handleInputSpinner() {
-  document.querySelectorAll('.player-points').forEach((pointInput, index) => {
-    playersData[index].points = +pointInput.value;
-  });
-  if (isWinning()) {
-    document.getElementById('win-sound').play();
-    endGame();
-  }
-}
-
-function createPlayerCards(playersData) {
-  const ul = document.createElement('ul');
-  ul.classList.add('player-cards');
-  const playerCards = playersData
-    .map((playerData, index) => {
-      const { playerName, points } = playerData;
-      return `<li class="player-card">
-            <h3 class="player-name">${playerName}</h3>
-            <label>Points: <input type="number" class="player-points" value="${points}" min="0" name="player-points"></label>
-            <div>
-              <button class="correct-btn btn" data-number="${index}">Correct</button>
-              <button class="wrong-btn btn" data-number="${index}">Wrong</button>
-            </div>
-          </li>`;
-    })
-    .join('');
-  ul.innerHTML = playerCards;
-  return ul;
-}
-
-function handlePointsBtn(event, isCorrect) {
-  const targetPlayerNumber = +event.target.dataset.number;
-  if (isCorrect) {
-    playersData[targetPlayerNumber].points += 1;
-  } else {
-    playersData.forEach((playerData, index) => {
-      if (targetPlayerNumber !== index) {
-        playerData.points += 1;
-      }
-    });
-  }
-  document.querySelectorAll('.player-points').forEach((pointInput, index) => {
-    pointInput.value = playersData[index].points;
-  });
-  if (isWinning()) {
-    document.getElementById('win-sound').play();
-    endGame();
-  }
-}
-
-function endGame() {
-  const winningPlayersData = playersData.find(
-    ({ points }) => points === endGamePoint
-  );
-  const message = document.createElement('p');
-  message.classList.add('win-message');
-  message.innerHTML = `${winningPlayersData.playerName} wins!`;
-
-  document
-    .querySelector('.player-cards-container')
-    .insertBefore(message, document.querySelector('.player-cards'));
-
-  const playAgainBtn = document.createElement('button');
-  playAgainBtn.classList.add('btn', 'reset-btn');
-  playAgainBtn.innerText = 'Play again';
-  document.querySelector('.player-cards-container').appendChild(playAgainBtn);
-  document.querySelector('.reset-btn').addEventListener('click', resetGame);
-
-  document.querySelectorAll('.player-cards .btn').forEach((btn) => {
-    btn.disabled = true;
-  });
-  document.querySelectorAll('.player-points').forEach((pointInput) => {
-    pointInput.disabled = true;
-  });
-}
-
-function resetGame() {
-  playersData = [];
-  playerNameInputs.forEach((input) => {
-    input.value = '';
-  });
-  document.querySelector('.player-cards-container').innerHTML = '';
-}
-
+//sorting
 const sortAlphabetically = (questions) => {
   return [...questions].sort((a, b) => {
     const questionA = a.question.toLowerCase();
@@ -383,4 +261,142 @@ function sortQuestions() {
   console.log(quizQuestions);
   console.log(sortedQuestions);
   displayQuestionsList(sortedQuestions);
+}
+
+//game
+const gameState = { playersData: [], isGameActive: false };
+
+function handlePlayerNameInput() {
+  startQuizBtn.disabled = gameState.isGameActive;
+}
+
+function startQuiz(event) {
+  event.preventDefault();
+  playerCardsContainer.innerHTML = '';
+  startQuizBtn.disabled = true;
+  const playerNames = [...playerNameInputs].map((input) => input.value.trim());
+  if (!areValuesUnique(playerNames)) {
+    const message = createMessage(
+      "You've entered the same name twice. Please enter different names."
+    );
+    playerCardsContainer.appendChild(message);
+    startQuizBtn.disabled = false;
+    return;
+  }
+  event.target.reset();
+  gameState.isGameActive = true;
+  playerNames.forEach((playerName) => {
+    const player = { playerName, points: 0 };
+    gameState.playersData.push(player);
+  });
+
+  const ul = createPlayerCards(gameState.playersData);
+  playerCardsContainer.appendChild(ul);
+
+  document.querySelectorAll('.correct-btn').forEach((correctBtn) => {
+    correctBtn.addEventListener('click', (event) => {
+      handlePointsBtn(event, true);
+    });
+  });
+  document.querySelectorAll('.wrong-btn').forEach((wrongBtn) => {
+    wrongBtn.addEventListener('click', (event) => {
+      handlePointsBtn(event, false);
+    });
+  });
+
+  document.querySelectorAll('.player-points').forEach((pointInput) => {
+    pointInput.addEventListener('keydown', (event) => {
+      event.preventDefault();
+    });
+    pointInput.addEventListener('input', handleInputSpinner);
+  });
+}
+
+const isWinning = () =>
+  gameState.playersData.some(({ points }) => points === endGamePoint);
+
+function handleInputSpinner() {
+  document.querySelectorAll('.player-points').forEach((pointInput, index) => {
+    gameState.playersData[index].points = +pointInput.value;
+  });
+  if (isWinning()) {
+    document.getElementById('win-sound').play();
+    endGame();
+  }
+}
+
+function createPlayerCards(playersData) {
+  const ul = document.createElement('ul');
+  ul.classList.add('player-cards');
+  const playerCards = gameState.playersData
+    .map((playerData, index) => {
+      const { playerName, points } = playerData;
+      return `<li class="player-card">
+            <h3 class="player-name">${playerName}</h3>
+            <label>Points: <input type="number" class="player-points" value="${points}" min="0" name="player-points"></label>
+            <div>
+              <button class="correct-btn btn" data-number="${index}">Correct</button>
+              <button class="wrong-btn btn" data-number="${index}">Wrong</button>
+            </div>
+          </li>`;
+    })
+    .join('');
+  ul.innerHTML = playerCards;
+  return ul;
+}
+
+function handlePointsBtn(event, isCorrect) {
+  const targetPlayerNumber = +event.target.dataset.number;
+  if (isCorrect) {
+    gameState.playersData[targetPlayerNumber].points += 1;
+  } else {
+    gameState.playersData.forEach((playerData, index) => {
+      if (targetPlayerNumber !== index) {
+        playerData.points += 1;
+      }
+    });
+  }
+  document.querySelectorAll('.player-points').forEach((pointInput, index) => {
+    pointInput.value = gameState.playersData[index].points;
+  });
+  if (isWinning()) {
+    document.getElementById('win-sound').play();
+    endGame();
+  }
+}
+
+function endGame() {
+  const winningPlayersData = gameState.playersData.find(
+    ({ points }) => points === endGamePoint
+  );
+  const message = document.createElement('p');
+  message.classList.add('win-message');
+  message.innerHTML = `${winningPlayersData.playerName} wins!`;
+
+  playerCardsContainer.insertBefore(
+    message,
+    document.querySelector('.player-cards')
+  );
+
+  const playAgainBtn = document.createElement('button');
+  playAgainBtn.classList.add('btn', 'reset-btn');
+  playAgainBtn.innerText = 'Play again';
+  playerCardsContainer.appendChild(playAgainBtn);
+  document.querySelector('.reset-btn').addEventListener('click', resetGame);
+
+  document.querySelectorAll('.player-cards .btn').forEach((btn) => {
+    btn.disabled = true;
+  });
+  document.querySelectorAll('.player-points').forEach((pointInput) => {
+    pointInput.disabled = true;
+  });
+}
+
+function resetGame() {
+  gameState.playersData.splice(0, gameState.playersData.length);
+  gameState.isGameActive = false;
+  playerNameInputs.forEach((input) => {
+    input.value = '';
+  });
+  playerCardsContainer.innerHTML = '';
 }
