@@ -192,7 +192,7 @@ function handleToggleShowExplanation(event) {
 
 function showQuestionsList() {
   isQuestionListVisible = !isQuestionListVisible;
-  document.querySelector('.question-list').classList.toggle('hidden');
+  document.querySelector('.question-list-section').classList.toggle('hidden');
   if (isQuestionListVisible) {
     displayQuestionsList(quizQuestions);
   } else {
