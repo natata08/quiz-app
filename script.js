@@ -115,20 +115,22 @@ function handleRadioChange() {
 }
 
 function randomizeAnswers() {
-  //getting an array: [['sth', false], ['sth', false], ['sth', true],['sth', false]]
-  const answersAndCorrectness = Array.from(answerInputs).map(
-    (answer, index) => [answer.value, correctnessInputs[index].checked]
+  const answersAndCorrectness = [...answerInputs].map((answer, index) => ({
+    value: answer.value,
+    correct: correctnessInputs[index].checked,
+  }));
+  const sortedAnswersAndCorrectness = [...answersAndCorrectness].sort(
+    () => Math.random() - 0.5
   );
-  //shuffle the elements of an array
-  answersAndCorrectness.sort(() => Math.random() - 0.5);
-  //assigning values to the corresponding inputs and radio buttons
   answerInputs.forEach((answerInput, index) => {
-    answerInput.value = answersAndCorrectness[index][0];
-    correctnessInputs[index].checked = answersAndCorrectness[index][1];
+    const { value, correct } = sortedAnswersAndCorrectness[index];
+    answerInput.value = value;
+    correctnessInputs[index].checked = correct;
   });
-  // change the colors only if randomizing after specifying the correctness
-  if (answersAndCorrectness.filter((item) => item.includes(true)).length)
+
+  if (answersAndCorrectness.some((item) => item.correct)) {
     handleRadioChange();
+  }
 }
 
 //question list
