@@ -1,5 +1,6 @@
 :root {
   --font-primary: Geneva, Verdana, sans-serif;
+  --font-header: 'Pacifico', cursive;
   --background-color-primary: #ecf5ff;
   --color-gradient: linear-gradient(to bottom, #000428, #004e92);
   --color-primary: #444;
@@ -146,7 +147,11 @@ main {
 
 header {
   background: var(--color-gradient);
-  padding: 2rem 2rem;
+  padding: 2.5rem 1rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5rem;
+  font-size: 1.5rem;
+  font-family: var(--font-header);
 }
 
 h1 {
@@ -399,10 +404,11 @@ footer {
   background: var(--color-gradient);
   color: var(--color-secondary);
   text-align: center;
-  padding: 20px 0;
+  padding: 2.5rem 0;
   position: fixed;
   bottom: 0;
   width: 100%;
+  font-size: 1.7rem;
 }
 
 .hidden {
