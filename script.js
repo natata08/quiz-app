@@ -108,13 +108,9 @@ function submitForm(event) {
 
 function handleRadioChange() {
   answerInputs.forEach((answerInput, index) => {
-    if (correctnessInputs[index].checked) {
-      answerInput.classList.add('correct-answer');
-      answerInput.classList.remove('wrong-answer');
-    } else {
-      answerInput.classList.add('wrong-answer');
-      answerInput.classList.remove('correct-answer');
-    }
+    const isCorrect = correctnessInputs[index].checked;
+    answerInput.classList.toggle('correct-answer', isCorrect);
+    answerInput.classList.toggle('wrong-answer', !isCorrect);
   });
 }
 
