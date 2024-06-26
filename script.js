@@ -1,6 +1,5 @@
 const quizQuestions = [];
 const prefixes = ['A', 'B', 'C', 'D'];
-const endGamePoint = 10;
 let isQuestionListVisible = false;
 
 const showQuestionListBtn = document.getElementById('show-list-btn');
@@ -8,7 +7,6 @@ const answerInputs = document.querySelectorAll('.answer');
 const correctnessInputs = document.getElementsByName('correctAnswer');
 const questionList = document.querySelector('.list-container');
 const searchInput = document.getElementById('search-input');
-const startQuizBtn = document.getElementById('start-quiz-btn');
 const playerNameInputs = document.getElementsByName('player-name');
 const playerCardsContainer = document.querySelector('.player-cards-container');
 const gameIntroForm = document.getElementById('game-intro');
@@ -26,9 +24,6 @@ document
   .getElementById('sort-select')
   .addEventListener('change', sortQuestions);
 gameIntroForm.addEventListener('submit', startQuiz);
-playerNameInputs.forEach((playerNameInput) => {
-  playerNameInput.addEventListener('input', handlePlayerNameInput);
-});
 
 function createMessage(message) {
   const messageEl = document.createElement('p');
@@ -292,22 +287,40 @@ function sortQuestions() {
 
 //game
 const gameState = { playersData: [], isGameActive: false };
+const endGamePoint = 10;
 
-function handlePlayerNameInput() {
-  startQuizBtn.disabled = gameState.isGameActive;
+function createPlayerCards(playersData) {
+  const ul = document.createElement('ul');
+  ul.classList.add('player-cards');
+  const playerCards = playersData
+    .map((playerData, index) => {
+      const { playerName, points } = playerData;
+      return `<li class="player-card">
+            <h4 class="player-name">${playerName}</h4>
+            <label for="player-points${index}" class="hidden">Points: </label><input type="number" class="player-points" id="player-points${index}" value="${points}" min="0" name="player-points">
+            <div>
+              <button class="correct-btn btn" data-number="${index}"><span class="hidden">Correct</span><i class="fa-regular fa-circle-check"></i></button>
+              <button class="wrong-btn btn" data-number="${index}"><span class="hidden">Wrong</span><i class="fa-regular fa-circle-xmark"></i></button>
+            </div>
+          </li>`;
+    })
+    .join('');
+  ul.innerHTML = playerCards;
+  return ul;
 }
+
+const isWinning = () =>
+  gameState.playersData.some(({ points }) => points === endGamePoint);
 
 function startQuiz(event) {
   event.preventDefault();
   playerCardsContainer.innerHTML = '';
-  startQuizBtn.disabled = true;
   const playerNames = [...playerNameInputs].map((input) => input.value.trim());
   if (!areValuesUnique(playerNames)) {
     const message = createMessage(
       "You've entered the same name twice. Please enter different names."
     );
     playerCardsContainer.appendChild(message);
-    startQuizBtn.disabled = false;
     return;
   }
   event.target.reset();
@@ -347,9 +360,6 @@ function startQuiz(event) {
   });
 }
 
-const isWinning = () =>
-  gameState.playersData.some(({ points }) => points === endGamePoint);
-
 function handleInputSpinner() {
   document.querySelectorAll('.player-points').forEach((pointInput, index) => {
     gameState.playersData[index].points = +pointInput.value;
@@ -358,26 +368,6 @@ function handleInputSpinner() {
     document.getElementById('win-sound').play();
     endGame();
   }
-}
-
-function createPlayerCards(playersData) {
-  const ul = document.createElement('ul');
-  ul.classList.add('player-cards');
-  const playerCards = playersData
-    .map((playerData, index) => {
-      const { playerName, points } = playerData;
-      return `<li class="player-card">
-            <h4 class="player-name">${playerName}</h4>
-            <label for="player-points${index}" class="hidden">Points: </label><input type="number" class="player-points" id="player-points${index}" value="${points}" min="0" name="player-points">
-            <div>
-              <button class="correct-btn btn" data-number="${index}"><span class="hidden">Correct</span><i class="fa-regular fa-circle-check"></i></button>
-              <button class="wrong-btn btn" data-number="${index}"><span class="hidden">Wrong</span><i class="fa-regular fa-circle-xmark"></i></button>
-            </div>
-          </li>`;
-    })
-    .join('');
-  ul.innerHTML = playerCards;
-  return ul;
 }
 
 function handlePointsBtn(event, isCorrect) {
