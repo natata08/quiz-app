@@ -6,7 +6,7 @@
   --color-primary: #444;
   --color-secondary: #fff;
   --color-button: #004e92;
-  --color-player: linear-gradient(to top, #000428c5, #004e92c6);
+  --color-player: linear-gradient(to top, #000428e2, #004e92);
   --color-button-hover: #06106a;
   --color-shadow: rgba(22, 57, 232, 0.5);
   --color-shadow-secondary: rgba(0, 0, 0, 0.46);
@@ -407,6 +407,7 @@ form {
   justify-content: space-evenly;
   align-items: center;
   min-width: 25rem;
+  gap: 2rem;
 }
 
 .player-name {
@@ -415,8 +416,8 @@ form {
   padding: 1rem 2rem;
   border-radius: 1rem;
   box-shadow: 0.1rem 0.1rem 0.4rem 0 var(--color-secondary);
-  margin-bottom: 1rem;
   width: 15rem;
+  font-size: 2rem;
 }
 
 .player-card .correct-btn,
@@ -441,18 +442,19 @@ form {
 
 .player-card .correct-btn i,
 .player-card .wrong-btn i {
-  font-size: 3rem;
+  font-size: 5rem;
 }
 
 .player-points {
   width: 15rem;
   height: 15rem;
   text-align: center;
-  padding-left: 0.8rem;
+  padding-left: 1.1rem;
   background-color: var(--background-color-primary);
   border: none;
   border-radius: 1rem;
-  font-size: 5rem;
+  font-size: 7rem;
+  font-weight: bold;
 }
 
 .player-card div {
