@@ -208,7 +208,7 @@ form {
 }
 
 .answer {
-  width: 50%;
+  flex-grow: 1;
 }
 
 .explanation-container > label,
