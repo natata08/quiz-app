@@ -13,7 +13,7 @@ const playerNameInputs = document.getElementsByName('player-name');
 const playerCardsContainer = document.querySelector('.player-cards-container');
 const gameIntroForm = document.getElementById('game-intro');
 
-document.addEventListener('DOMContentLoaded', fetchQuestions);
+document.addEventListener('DOMContentLoaded', prepareQuestions);
 document.getElementById('quiz-form').addEventListener('submit', submitForm);
 correctnessInputs.forEach((correctnessInput) => {
   correctnessInput.addEventListener('change', handleRadioChange);
@@ -37,6 +37,14 @@ function createMessage(message) {
   return messageEl;
 }
 
+function createButton(className, text, functionOnClick) {
+  const button = document.createElement('button');
+  button.classList.add('btn', className);
+  button.innerText = text;
+  button.onclick = functionOnClick;
+  return button;
+}
+
 const areValuesUnique = (inputArray) => {
   const uniqueValues = new Set(inputArray);
   return uniqueValues.size === inputArray.length;
@@ -55,13 +63,15 @@ const displayTemporaryMessage = (parentEl, message) => {
   }, '3000');
 };
 
-async function fetchQuestions() {
+async function prepareQuestions() {
   try {
     const response = await fetch(
       'https://raw.githubusercontent.com/Natata08/Natata08.github.io/main/quiz-data/questions.json'
     );
     const data = await response.json();
-    quizQuestions.push(...data);
+    const storedQuestions =
+      JSON.parse(localStorage.getItem('userQuestions')) || [];
+    quizQuestions.push(...data, ...storedQuestions);
   } catch (error) {
     console.error(error);
   }
@@ -91,7 +101,12 @@ function submitForm(event) {
     })),
     explanation: explanationInput.value,
   };
+
   quizQuestions.push(questionItem);
+  const storedQuestions =
+    JSON.parse(localStorage.getItem('userQuestions')) || [];
+  storedQuestions.push(questionItem);
+  localStorage.setItem('userQuestions', JSON.stringify(storedQuestions));
 
   event.target.reset();
   for (const answerInput of answerInputs) {
@@ -407,14 +422,6 @@ function endGame() {
   document.querySelectorAll('.player-points').forEach((pointInput) => {
     pointInput.disabled = true;
   });
-}
-
-function createButton(className, text, functionOnClick) {
-  const button = document.createElement('button');
-  button.classList.add('btn', className);
-  button.innerText = text;
-  button.onclick = functionOnClick;
-  return button;
 }
 
 function resetGame() {
