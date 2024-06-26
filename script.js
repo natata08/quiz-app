@@ -11,6 +11,7 @@ const searchInput = document.getElementById('search-input');
 const startQuizBtn = document.getElementById('start-quiz-btn');
 const playerNameInputs = document.getElementsByName('player-name');
 const playerCardsContainer = document.querySelector('.player-cards-container');
+const gameIntroForm = document.getElementById('game-intro');
 
 document.addEventListener('DOMContentLoaded', fetchQuestions);
 document.getElementById('quiz-form').addEventListener('submit', submitForm);
@@ -24,7 +25,7 @@ showQuestionsListBtn.addEventListener('click', showQuestionsList);
 document
   .getElementById('sort-select')
   .addEventListener('change', sortQuestions);
-document.getElementById('game-intro').addEventListener('submit', startQuiz);
+gameIntroForm.addEventListener('submit', startQuiz);
 playerNameInputs.forEach((playerNameInput) => {
   playerNameInput.addEventListener('input', handlePlayerNameInput);
 });
@@ -300,6 +301,7 @@ function startQuiz(event) {
     gameState.playersData.push(player);
   });
 
+  gameIntroForm.classList.add('hidden');
   const ul = createPlayerCards(gameState.playersData);
   playerCardsContainer.appendChild(ul);
 
@@ -338,7 +340,7 @@ function handleInputSpinner() {
 function createPlayerCards(playersData) {
   const ul = document.createElement('ul');
   ul.classList.add('player-cards');
-  const playerCards = gameState.playersData
+  const playerCards = playersData
     .map((playerData, index) => {
       const { playerName, points } = playerData;
       return `<li class="player-card">
@@ -409,4 +411,5 @@ function resetGame() {
     input.value = '';
   });
   playerCardsContainer.innerHTML = '';
+  gameIntroForm.classList.remove('hidden');
 }

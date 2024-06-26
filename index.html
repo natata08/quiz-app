@@ -4,6 +4,10 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="styles.css" />
+    <link
+      rel="stylesheet"
+      href="https://use.fontawesome.com/releases/v6.5.2/css/all.css"
+    />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -152,17 +156,22 @@
       </section>
 
       <section class="game-section">
-        <h2>Let's play!</h2>
+        <h2>Let's start the game!</h2>
         <form class="game-intro" id="game-intro">
-          <p>Please enter your names:</p>
-          <div>
-            <label for="player1">Player 1: </label>
-            <input type="text" id="player1" name="player-name" required />
+          <h3>Player details</h3>
+          <div class="player-details-container">
+            <div class="player-details">
+              <i class="fa-regular fa-circle-user"></i>
+              <label for="player1">Player 1 </label>
+              <input type="text" id="player1" name="player-name" required />
+            </div>
+            <div class="player-details">
+              <i class="fa-regular fa-circle-user"></i>
+              <label for="player2">Player 2 </label>
+              <input type="text" id="player2" name="player-name" required />
+            </div>
           </div>
-          <div>
-            <label for="player2">Player 2: </label>
-            <input type="text" id="player2" name="player-name" required />
-          </div>
+
           <button type="submit" class="btn" id="start-quiz-btn" disabled>
             Start Quiz
           </button>

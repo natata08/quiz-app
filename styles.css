@@ -6,6 +6,7 @@
   --color-primary: #444;
   --color-secondary: #fff;
   --color-button: #004e92;
+  --color-player: linear-gradient(to top, #000428c5, #004e92c6);
   --color-button-hover: #06106a;
   --color-shadow: rgba(22, 57, 232, 0.5);
   --color-shadow-secondary: rgba(0, 0, 0, 0.46);
@@ -104,13 +105,14 @@ body {
 }
 
 .btn {
-  font-size: 1.1rem;
-  min-width: 16rem;
-  height: 4rem;
+  font-size: 1.5rem;
+  padding: 1.5rem 3rem;
+  text-align: center;
   font-weight: bold;
   text-transform: uppercase;
   letter-spacing: 0.1rem;
-  border: 0;
+  border: none;
+  border-radius: 0.8rem;
   background-color: var(--color-button);
   color: var(--color-secondary);
 }
@@ -142,7 +144,7 @@ main {
   margin: 0 auto;
   margin-top: 2rem;
   margin-bottom: 6rem;
-  gap: 2rem;
+  gap: 10rem;
 }
 
 header {
@@ -314,9 +316,9 @@ form {
 
 .question-list-section .btn {
   margin-top: 0.7rem;
-  font-size: 0.8rem;
-  min-width: 9rem;
-  height: 3rem;
+  font-size: 1rem;
+  padding: 1.2rem 2rem;
+  min-width: 13rem;
 }
 
 .correct-checkmark::after {
@@ -328,10 +330,38 @@ form {
 /* game */
 .game-intro {
   display: flex;
-  flex-direction: column;
   align-items: center;
-  gap: 2rem;
+  gap: 4rem;
   margin-bottom: 3rem;
+}
+
+.player-details-container {
+  display: flex;
+  flex-flow: row wrap;
+  gap: 4rem;
+}
+
+.player-details {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  text-align: center;
+  width: 20rem;
+  height: 25rem;
+  padding: 2rem;
+  background: var(--color-player);
+  color: var(--color-secondary);
+  border-radius: 2rem;
+  box-shadow: 0.1rem 0.4rem 1.4rem 0 var(--color-shadow-secondary);
+  font-size: bold;
+}
+
+.player-details label {
+  font-weight: bold;
+}
+
+.fa-regular {
+  font-size: 8rem;
 }
 
 .player-cards-container {
