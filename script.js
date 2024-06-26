@@ -3,10 +3,10 @@ const prefixes = ['A', 'B', 'C', 'D'];
 const endGamePoint = 10;
 let isQuestionListVisible = false;
 
-const showQuestionsListBtn = document.getElementById('show-list-btn');
+const showQuestionListBtn = document.getElementById('show-list-btn');
 const answerInputs = document.querySelectorAll('.answer');
 const correctnessInputs = document.getElementsByName('correctAnswer');
-const questionsList = document.querySelector('.list-container');
+const questionList = document.querySelector('.list-container');
 const searchInput = document.getElementById('search-input');
 const startQuizBtn = document.getElementById('start-quiz-btn');
 const playerNameInputs = document.getElementsByName('player-name');
@@ -21,7 +21,7 @@ correctnessInputs.forEach((correctnessInput) => {
 document
   .getElementById('randomize-btn')
   .addEventListener('click', randomizeAnswers);
-showQuestionsListBtn.addEventListener('click', showQuestionsList);
+showQuestionListBtn.addEventListener('click', showQuestionList);
 document
   .getElementById('sort-select')
   .addEventListener('change', sortQuestions);
@@ -114,8 +114,9 @@ function submitForm(event) {
   }
 
   if (isQuestionListVisible) {
-    showQuestionsList();
+    showQuestionList();
   }
+
   displayTemporaryMessage(
     addQuestionSection,
     'Question submitted successfully!'
@@ -150,7 +151,7 @@ function randomizeAnswers() {
 }
 
 //question list
-function createQuestionsList(questions) {
+function createQuestionList(questions) {
   const ul = document.createElement('ul');
   ul.innerHTML = questions
     .map(
@@ -177,14 +178,14 @@ function createQuestionsList(questions) {
   return ul;
 }
 
-function displayQuestionsList(questions) {
-  questionsList.innerHTML = '';
+function displayQuestionList(questions) {
+  questionList.innerHTML = '';
   if (questions.length === 0) {
     const message = createMessage('There are no questions.');
-    questionsList.appendChild(message);
+    questionList.appendChild(message);
   } else {
-    const ul = createQuestionsList(questions);
-    questionsList.appendChild(ul);
+    const ul = createQuestionList(questions);
+    questionList.appendChild(ul);
 
     document.querySelectorAll('.show-correct-btn').forEach((button) => {
       button.addEventListener('click', showCorrectAnswer);
@@ -206,15 +207,15 @@ function handleToggleShowExplanation(event) {
     .classList.toggle('rotate-up');
 }
 
-function showQuestionsList() {
+function showQuestionList() {
   isQuestionListVisible = !isQuestionListVisible;
   document.querySelector('.question-list-section').classList.toggle('hidden');
   if (isQuestionListVisible) {
-    displayQuestionsList(quizQuestions);
+    displayQuestionList(quizQuestions);
   } else {
-    questionsList.innerHTML = '';
+    questionList.innerHTML = '';
   }
-  showQuestionsListBtn.innerText = isQuestionListVisible
+  showQuestionListBtn.innerText = isQuestionListVisible
     ? 'Hide questions'
     : 'Show questions';
 }
@@ -258,7 +259,7 @@ searchInput.addEventListener('input', () => {
 function searchQuestions() {
   const keyword = searchInput.value;
   const filteredQuestions = filterQuestions(quizQuestions, keyword);
-  displayQuestionsList(filteredQuestions);
+  displayQuestionList(filteredQuestions);
 }
 
 //sorting
@@ -286,7 +287,7 @@ function sortQuestions() {
     sortType === 'alphabetical'
       ? sortAlphabetically(quizQuestions)
       : sortRandomly(quizQuestions);
-  displayQuestionsList(sortedQuestions);
+  displayQuestionList(sortedQuestions);
 }
 
 //game
