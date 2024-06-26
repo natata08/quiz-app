@@ -161,6 +161,11 @@ h1 {
   color: var(--color-secondary);
 }
 
+h2 {
+  /* text-transform: uppercase; */
+  margin-bottom: 2.5rem;
+}
+
 input[type='text'],
 input[type='search'] {
   padding: 0.5rem 0.7rem;
@@ -368,6 +373,10 @@ form {
   text-align: center;
 }
 
+.player-cards-container h3 {
+  margin-bottom: 2rem;
+}
+
 .win-message {
   font-size: 3rem;
   margin-bottom: 2rem;
@@ -380,7 +389,10 @@ form {
   flex-flow: row wrap;
   justify-content: center;
   gap: 3rem;
-  margin-bottom: 2rem;
+  margin-bottom: 5rem;
+  background: var(--color-gradient);
+  padding: 4rem;
+  border-radius: 2rem;
 }
 
 @media (max-width: 600px) {
@@ -394,39 +406,58 @@ form {
   flex-direction: column;
   justify-content: space-evenly;
   align-items: center;
-  min-width: 30rem;
-  min-height: 25rem;
-  gap: 2rem;
-  padding: 1.5rem;
-  background-color: var(--color-secondary);
-  border-radius: 2rem;
-  box-shadow: 0.1rem 0.4rem 1.4rem 0 var(--color-shadow-secondary);
+  min-width: 25rem;
+}
+
+.player-name {
+  display: block;
+  background-color: var(--background-color-primary);
+  padding: 1rem 2rem;
+  border-radius: 1rem;
+  box-shadow: 0.1rem 0.1rem 0.4rem 0 var(--color-secondary);
+  margin-bottom: 1rem;
+  width: 15rem;
 }
 
 .player-card .correct-btn,
 .player-card .wrong-btn {
-  min-width: 10rem;
+  background-color: transparent;
+  border-radius: unset;
+  padding: 1rem;
 }
 
-.player-points {
-  width: 5.5rem;
-  padding-left: 0.8rem;
-  border: 1px solid var(--color-button);
-  font-size: 1.8rem;
-}
-.player-card div {
-  display: flex;
-  gap: 2rem;
+.player-card .correct-btn:hover,
+.player-card .wrong-btn:hover {
+  box-shadow: none;
 }
 
 .player-card .correct-btn {
-  background-color: var(--color-green);
   color: var(--color-dark-green);
 }
 
 .player-card .wrong-btn {
-  background-color: var(--color-red);
   color: var(--color-dark-red);
+}
+
+.player-card .correct-btn i,
+.player-card .wrong-btn i {
+  font-size: 3rem;
+}
+
+.player-points {
+  width: 15rem;
+  height: 15rem;
+  text-align: center;
+  padding-left: 0.8rem;
+  background-color: var(--background-color-primary);
+  border: none;
+  border-radius: 1rem;
+  font-size: 5rem;
+}
+
+.player-card div {
+  display: flex;
+  gap: 1.5rem;
 }
 
 /* footer */

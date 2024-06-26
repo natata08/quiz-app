@@ -301,9 +301,16 @@ function startQuiz(event) {
     gameState.playersData.push(player);
   });
 
+  const heading = document.createElement('h3');
+  heading.textContent = 'Game Scoreboard';
+  playerCardsContainer.appendChild(heading);
+
   gameIntroForm.classList.add('hidden');
   const ul = createPlayerCards(gameState.playersData);
   playerCardsContainer.appendChild(ul);
+
+  const quitBtn = createButton('quit-btn', 'Quit game', resetGame);
+  playerCardsContainer.appendChild(quitBtn);
 
   document.querySelectorAll('.correct-btn').forEach((correctBtn) => {
     correctBtn.addEventListener('click', (event) => {
@@ -344,11 +351,11 @@ function createPlayerCards(playersData) {
     .map((playerData, index) => {
       const { playerName, points } = playerData;
       return `<li class="player-card">
-            <h3 class="player-name">${playerName}</h3>
-            <label>Points: <input type="number" class="player-points" value="${points}" min="0" name="player-points"></label>
+            <h4 class="player-name">${playerName}</h4>
+            <label for="player-points${index}" class="hidden">Points: </label><input type="number" class="player-points" id="player-points${index}" value="${points}" min="0" name="player-points">
             <div>
-              <button class="correct-btn btn" data-number="${index}">Correct</button>
-              <button class="wrong-btn btn" data-number="${index}">Wrong</button>
+              <button class="correct-btn btn" data-number="${index}"><span class="hidden">Correct</span><i class="fa-regular fa-circle-check"></i></button>
+              <button class="wrong-btn btn" data-number="${index}"><span class="hidden">Wrong</span><i class="fa-regular fa-circle-xmark"></i></button>
             </div>
           </li>`;
     })
@@ -358,7 +365,7 @@ function createPlayerCards(playersData) {
 }
 
 function handlePointsBtn(event, isCorrect) {
-  const targetPlayerNumber = +event.target.dataset.number;
+  const targetPlayerNumber = +event.currentTarget.dataset.number;
   if (isCorrect) {
     gameState.playersData[targetPlayerNumber].points += 1;
   } else {
@@ -390,11 +397,9 @@ function endGame() {
     document.querySelector('.player-cards')
   );
 
-  const playAgainBtn = document.createElement('button');
-  playAgainBtn.classList.add('btn', 'reset-btn');
-  playAgainBtn.innerText = 'Play again';
+  document.querySelector('.quit-btn').classList.add('hidden');
+  const playAgainBtn = createButton('reset-btn', 'Play again', resetGame);
   playerCardsContainer.appendChild(playAgainBtn);
-  document.querySelector('.reset-btn').addEventListener('click', resetGame);
 
   document.querySelectorAll('.player-cards .btn').forEach((btn) => {
     btn.disabled = true;
@@ -402,6 +407,14 @@ function endGame() {
   document.querySelectorAll('.player-points').forEach((pointInput) => {
     pointInput.disabled = true;
   });
+}
+
+function createButton(className, text, functionOnClick) {
+  const button = document.createElement('button');
+  button.classList.add('btn', className);
+  button.innerText = text;
+  button.onclick = functionOnClick;
+  return button;
 }
 
 function resetGame() {
