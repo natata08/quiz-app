@@ -161,7 +161,7 @@ function createQuestionList(questions) {
             `<p><span class="prefix">${prefixes[index]}</span> ${answer.text}</p>`
         )
         .join('')}
-      <div class="toggle" id="toggle${id}">
+      <div class="toggle" id="toggle" onclick="handleToggleShowExplanation(${id})">
         <div class="triangle" id="explanation-triangle${id}"></div>
         <p>Explanation</p>
       </div>
@@ -185,20 +185,13 @@ function displayQuestionList(questions) {
     document.querySelectorAll('.show-correct-btn').forEach((button) => {
       button.addEventListener('click', showCorrectAnswer);
     });
-
-    document.querySelectorAll('.toggle').forEach((toggle) => {
-      toggle.addEventListener('click', handleToggleShowExplanation);
-    });
   }
 }
 
-function handleToggleShowExplanation(event) {
-  const toggleId = event.currentTarget.id.split('toggle')[1];
+function handleToggleShowExplanation(id) {
+  document.getElementById(`explanation-text${id}`).classList.toggle('hidden');
   document
-    .getElementById(`explanation-text${toggleId}`)
-    .classList.toggle('hidden');
-  document
-    .getElementById(`explanation-triangle${toggleId}`)
+    .getElementById(`explanation-triangle${id}`)
     .classList.toggle('rotate-up');
 }
 
@@ -299,8 +292,8 @@ function createPlayerCards(playersData) {
             <h4 class="player-name">${playerName}</h4>
             <label for="player-points${index}" class="hidden">Points: </label><input type="number" class="player-points" id="player-points${index}" value="${points}" min="0" name="player-points">
             <div>
-              <button class="correct-btn btn" data-number="${index}"><span class="hidden">Correct</span><i class="fa-regular fa-circle-check"></i></button>
-              <button class="wrong-btn btn" data-number="${index}"><span class="hidden">Wrong</span><i class="fa-regular fa-circle-xmark"></i></button>
+              <button class="correct-btn btn" onclick="handlePointsBtn(${index}, true)"><span class="hidden">Correct</span><i class="fa-regular fa-circle-check"></i></button>
+              <button class="wrong-btn btn" onclick="handlePointsBtn(${index}, false)"><span class="hidden">Wrong</span><i class="fa-regular fa-circle-xmark"></i></button>
             </div>
           </li>`;
     })
@@ -341,17 +334,6 @@ function startQuiz(event) {
   const quitBtn = createButton('quit-btn', 'Quit game', resetGame);
   playerCardsContainer.appendChild(quitBtn);
 
-  document.querySelectorAll('.correct-btn').forEach((correctBtn) => {
-    correctBtn.addEventListener('click', (event) => {
-      handlePointsBtn(event, true);
-    });
-  });
-  document.querySelectorAll('.wrong-btn').forEach((wrongBtn) => {
-    wrongBtn.addEventListener('click', (event) => {
-      handlePointsBtn(event, false);
-    });
-  });
-
   document.querySelectorAll('.player-points').forEach((pointInput) => {
     pointInput.addEventListener('keydown', (event) => {
       event.preventDefault();
@@ -370,13 +352,12 @@ function handleInputSpinner() {
   }
 }
 
-function handlePointsBtn(event, isCorrect) {
-  const targetPlayerNumber = +event.currentTarget.dataset.number;
+function handlePointsBtn(id, isCorrect) {
   if (isCorrect) {
-    gameState.playersData[targetPlayerNumber].points += 1;
+    gameState.playersData[id].points += 1;
   } else {
     gameState.playersData.forEach((playerData, index) => {
-      if (targetPlayerNumber !== index) {
+      if (id !== index) {
         playerData.points += 1;
       }
     });
