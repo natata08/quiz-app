@@ -1,29 +1,17 @@
 const quizQuestions = [];
 const prefixes = ['A', 'B', 'C', 'D'];
-const endGamePoint = 10;
+let isQuestionListVisible = false;
 
-const showQuestionsListBtn = document.getElementById('show-list-btn');
+const showQuestionListBtn = document.getElementById('show-list-btn');
 const answerInputs = document.querySelectorAll('.answer');
 const correctnessInputs = document.getElementsByName('correctAnswer');
-const questionsList = document.querySelector('.list-container');
+const questionList = document.querySelector('.list-container');
 const searchInput = document.getElementById('search-input');
-const startQuizBtn = document.getElementById('start-quiz-btn');
 const playerNameInputs = document.getElementsByName('player-name');
+const playerCardsContainer = document.querySelector('.player-cards-container');
+const gameIntroForm = document.getElementById('game-intro');
 
-document.addEventListener('DOMContentLoaded', fetchQuestions);
-
-async function fetchQuestions() {
-  try {
-    const response = await fetch(
-      'https://raw.githubusercontent.com/Natata08/Natata08.github.io/main/quiz-data/questions.json'
-    );
-    const data = await response.json();
-    quizQuestions.push(...data);
-  } catch (error) {
-    console.error(error);
-  }
-}
-
+document.addEventListener('DOMContentLoaded', prepareQuestions);
 document.getElementById('quiz-form').addEventListener('submit', submitForm);
 correctnessInputs.forEach((correctnessInput) => {
   correctnessInput.addEventListener('change', handleRadioChange);
@@ -31,12 +19,11 @@ correctnessInputs.forEach((correctnessInput) => {
 document
   .getElementById('randomize-btn')
   .addEventListener('click', randomizeAnswers);
-showQuestionsListBtn.addEventListener('click', showQuestionsList);
-startQuizBtn.addEventListener('click', startQuiz);
-
+showQuestionListBtn.addEventListener('click', showQuestionList);
 document
   .getElementById('sort-select')
   .addEventListener('change', sortQuestions);
+gameIntroForm.addEventListener('submit', startQuiz);
 
 function createMessage(message) {
   const messageEl = document.createElement('p');
@@ -45,7 +32,121 @@ function createMessage(message) {
   return messageEl;
 }
 
-function createQuestionsList(questions) {
+function createButton(className, text, functionOnClick) {
+  const button = document.createElement('button');
+  button.classList.add('btn', className);
+  button.innerText = text;
+  button.onclick = functionOnClick;
+  return button;
+}
+
+const areValuesUnique = (inputArray) => {
+  const uniqueValues = new Set(inputArray);
+  return uniqueValues.size === inputArray.length;
+};
+
+const filterQuestions = (questions, keyword) =>
+  questions.filter((question) =>
+    question.question.toLowerCase().includes(keyword.toLowerCase().trim())
+  );
+
+const displayTemporaryMessage = (parentEl, message) => {
+  const messageEl = createMessage(message);
+  parentEl.appendChild(messageEl);
+  setTimeout(() => {
+    messageEl.remove();
+  }, '3000');
+};
+
+async function prepareQuestions() {
+  try {
+    const response = await fetch(
+      'https://raw.githubusercontent.com/Natata08/Natata08.github.io/main/quiz-data/questions.json'
+    );
+    const data = await response.json();
+    const storedQuestions =
+      JSON.parse(localStorage.getItem('userQuestions')) || [];
+    quizQuestions.push(...data, ...storedQuestions);
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+//submitting a question
+function submitForm(event) {
+  event.preventDefault();
+  const questionInput = document.getElementById('question');
+  const explanationInput = document.getElementById('explanation');
+  const addQuestionSection = document.querySelector('.add-question-section');
+
+  const answers = [...answerInputs].map((input) => input.value.trim());
+  if (!areValuesUnique(answers)) {
+    displayTemporaryMessage(
+      addQuestionSection,
+      'Please ensure all answers are unique.'
+    );
+    return;
+  }
+  const questionItem = {
+    id: quizQuestions.length + 1,
+    question: questionInput.value,
+    answers: answers.map((answer, index) => ({
+      text: answer,
+      isCorrect: correctnessInputs[index].checked,
+    })),
+    explanation: explanationInput.value,
+  };
+
+  quizQuestions.push(questionItem);
+  const storedQuestions =
+    JSON.parse(localStorage.getItem('userQuestions')) || [];
+  storedQuestions.push(questionItem);
+  localStorage.setItem('userQuestions', JSON.stringify(storedQuestions));
+
+  event.target.reset();
+  for (const answerInput of answerInputs) {
+    answerInput.classList.remove('wrong-answer', 'correct-answer');
+  }
+
+  if (isQuestionListVisible) {
+    showQuestionList();
+  }
+
+  displayTemporaryMessage(
+    addQuestionSection,
+    'Question submitted successfully!'
+  );
+}
+
+function handleRadioChange() {
+  answerInputs.forEach((answerInput, index) => {
+    const isCorrect = correctnessInputs[index].checked;
+    answerInput.classList.toggle('correct-answer', isCorrect);
+    answerInput.classList.toggle('wrong-answer', !isCorrect);
+  });
+}
+
+function randomizeAnswers() {
+  const answersAndCorrectness = [...answerInputs].map((answer, index) => ({
+    value: answer.value,
+    correct: correctnessInputs[index].checked,
+  }));
+  const sortedAnswersAndCorrectness = [...answersAndCorrectness].sort(
+    () => Math.random() - 0.5
+  );
+  answerInputs.forEach((answerInput, index) => {
+    const { value, correct } = sortedAnswersAndCorrectness[index];
+    answerInput.value = value;
+    correctnessInputs[index].checked = correct;
+  });
+
+  if (answersAndCorrectness.some((item) => item.correct)) {
+    handleRadioChange();
+  }
+}
+
+//question list
+function createQuestionList(questions) {
   const ul = document.createElement('ul');
   ul.innerHTML = questions
     .map(
@@ -60,9 +161,9 @@ function createQuestionsList(questions) {
             `<p><span class="prefix">${prefixes[index]}</span> ${answer.text}</p>`
         )
         .join('')}
-      <div class="toggle">
+      <div class="toggle" id="toggle" onclick="handleToggleShowExplanation(${id})">
         <div class="triangle" id="explanation-triangle${id}"></div>
-        <p>Show explanation</p>
+        <p>Explanation</p>
       </div>
       <p class="explanation-text hidden" id="explanation-text${id}">${explanation}</p>
       <button type="button" class="btn show-correct-btn" data-id="${id}">Show answer</button>
@@ -72,115 +173,46 @@ function createQuestionsList(questions) {
   return ul;
 }
 
-function displayQuestionsList(questions) {
-  questionsList.innerHTML = '';
+function displayQuestionList(questions) {
+  questionList.innerHTML = '';
   if (questions.length === 0) {
     const message = createMessage('There are no questions.');
-    questionsList.appendChild(message);
+    questionList.appendChild(message);
   } else {
-    const ul = createQuestionsList(questions);
-    questionsList.appendChild(ul);
+    const ul = createQuestionList(questions);
+    questionList.appendChild(ul);
 
     document.querySelectorAll('.show-correct-btn').forEach((button) => {
       button.addEventListener('click', showCorrectAnswer);
     });
-
-    document.querySelectorAll('.toggle').forEach((toggle, index) => {
-      toggle.addEventListener('click', () => {
-        document
-          .getElementById(`explanation-text${index + 1}`)
-          .classList.toggle('hidden');
-        document
-          .getElementById(`explanation-triangle${index + 1}`)
-          .classList.toggle('rotate-up');
-      });
-    });
   }
 }
 
-function filterQuestions(questions, keyword) {
-  return questions.filter((question) =>
-    question.question.toLowerCase().includes(keyword.toLowerCase().trim())
-  );
+function handleToggleShowExplanation(id) {
+  document.getElementById(`explanation-text${id}`).classList.toggle('hidden');
+  document
+    .getElementById(`explanation-triangle${id}`)
+    .classList.toggle('rotate-up');
 }
 
-function submitForm(event) {
-  event.preventDefault();
-  const questionInput = document.getElementById('question');
-  const answerInputsArray = Array.from(answerInputs);
-  const explanationInput = document.getElementById('explanation');
-
-  const questionItem = {
-    id: quizQuestions.length + 1,
-    question: questionInput.value,
-    answers: answerInputsArray.map((answer, index) => ({
-      text: answer.value,
-      isCorrect: correctnessInputs[index].checked,
-    })),
-    explanation: explanationInput.value,
-  };
-  quizQuestions.push(questionItem);
-
-  event.target.reset();
-  for (const answerInput of answerInputs) {
-    answerInput.classList.remove('wrong-answer', 'correct-answer');
-  }
-
-  const message = createMessage('Question submitted successfully!');
-  document.querySelector('.question-input').appendChild(message);
-  setTimeout(() => {
-    message.remove();
-  }, '3000');
-}
-
-function handleRadioChange() {
-  answerInputs.forEach((answerInput, index) => {
-    if (correctnessInputs[index].checked) {
-      answerInput.classList.add('correct-answer');
-      answerInput.classList.remove('wrong-answer');
-    } else {
-      answerInput.classList.add('wrong-answer');
-      answerInput.classList.remove('correct-answer');
-    }
-  });
-}
-
-function randomizeAnswers() {
-  //getting an array: [['sth', false], ['sth', false], ['sth', true],['sth', false]]
-  const answersAndCorrectness = Array.from(answerInputs).map(
-    (answer, index) => [answer.value, correctnessInputs[index].checked]
-  );
-  //shuffle the elements of an array
-  answersAndCorrectness.sort(() => Math.random() - 0.5);
-  //assigning values to the corresponding inputs and radio buttons
-  answerInputs.forEach((answerInput, index) => {
-    answerInput.value = answersAndCorrectness[index][0];
-    correctnessInputs[index].checked = answersAndCorrectness[index][1];
-  });
-  // change the colors only if randomizing after specifying the correctness
-  if (answersAndCorrectness.filter((item) => item.includes(true)).length)
-    handleRadioChange();
-}
-
-function showQuestionsList() {
-  document.querySelector('.question-list').classList.toggle('hidden');
-  if (questionsList.innerHTML === '') {
-    displayQuestionsList(quizQuestions);
-    showQuestionsListBtn.innerText = 'Hide questions';
+function showQuestionList() {
+  isQuestionListVisible = !isQuestionListVisible;
+  document.querySelector('.question-list-section').classList.toggle('hidden');
+  if (isQuestionListVisible) {
+    displayQuestionList(quizQuestions);
   } else {
-    questionsList.innerHTML = '';
-    showQuestionsListBtn.innerText = 'Show questions';
+    questionList.innerHTML = '';
   }
+  showQuestionListBtn.innerText = isQuestionListVisible
+    ? 'Hide questions'
+    : 'Show questions';
 }
 
 function showCorrectAnswer(event) {
   const clickedBtn = event.target;
-
-  if (clickedBtn.innerText.toLowerCase() === 'show answer') {
-    clickedBtn.innerText = 'Hide answer';
-  } else {
-    clickedBtn.innerText = 'Show answer';
-  }
+  const currentInnerText = clickedBtn.innerText.toLowerCase();
+  clickedBtn.innerText =
+    currentInnerText === 'show answer' ? 'Hide answer' : 'Show answer';
 
   const targetQuestionId = +clickedBtn.dataset.id;
   const targetQuestion = quizQuestions.find(
@@ -197,11 +229,12 @@ function showCorrectAnswer(event) {
   });
 }
 
+//search
 const debounce = (fn, delay = 1000) => {
   let timerId = null;
-  return (...args) => {
+  return () => {
     clearTimeout(timerId);
-    timerId = setTimeout(() => fn(...args), delay);
+    timerId = setTimeout(() => fn(), delay);
   };
 };
 
@@ -214,141 +247,10 @@ searchInput.addEventListener('input', () => {
 function searchQuestions() {
   const keyword = searchInput.value;
   const filteredQuestions = filterQuestions(quizQuestions, keyword);
-  displayQuestionsList(filteredQuestions);
+  displayQuestionList(filteredQuestions);
 }
 
-function checkInputs() {
-  const values = Array.from(playerNameInputs).map((input) =>
-    input.value.trim()
-  );
-  const isInputsFilled = values.every((value) => value !== '');
-  const isNameUnique = new Set(values).size === values.length;
-  startQuizBtn.disabled = !(isInputsFilled && isNameUnique);
-}
-
-playerNameInputs.forEach((input) =>
-  input.addEventListener('input', checkInputs)
-);
-
-let playersData = [];
-
-function startQuiz(event) {
-  event.preventDefault();
-  startQuizBtn.disabled = true;
-  playersData = Array.from(playerNameInputs).map((input) => ({
-    playerName: input.value,
-    points: 0,
-  }));
-
-  const ul = createPlayerCards(playersData);
-  document.querySelector('.player-cards-container').appendChild(ul);
-
-  document.querySelectorAll('.correct-btn').forEach((correctBtn) => {
-    correctBtn.addEventListener('click', (event) => {
-      handlePointsBtn(event, true);
-    });
-  });
-  document.querySelectorAll('.wrong-btn').forEach((wrongBtn) => {
-    wrongBtn.addEventListener('click', (event) => {
-      handlePointsBtn(event, false);
-    });
-  });
-
-  document.querySelectorAll('.player-points').forEach((pointInput) => {
-    pointInput.addEventListener('keydown', (event) => {
-      event.preventDefault();
-    });
-    pointInput.addEventListener('input', handleInputSpinner);
-  });
-}
-
-const isWinning = () =>
-  playersData.some(({ points }) => points === endGamePoint);
-
-function handleInputSpinner() {
-  document.querySelectorAll('.player-points').forEach((pointInput, index) => {
-    playersData[index].points = +pointInput.value;
-  });
-  if (isWinning()) {
-    document.getElementById('win-sound').play();
-    endGame();
-  }
-}
-
-function createPlayerCards(playersData) {
-  const ul = document.createElement('ul');
-  ul.classList.add('player-cards');
-  const playerCards = playersData
-    .map((playerData, index) => {
-      const { playerName, points } = playerData;
-      return `<li class="player-card">
-            <h3 class="player-name">${playerName}</h3>
-            <label>Points: <input type="number" class="player-points" value="${points}" min="0" name="player-points"></label>
-            <div>
-              <button class="correct-btn btn" data-number="${index}">Correct</button>
-              <button class="wrong-btn btn" data-number="${index}">Wrong</button>
-            </div>
-          </li>`;
-    })
-    .join('');
-  ul.innerHTML = playerCards;
-  return ul;
-}
-
-function handlePointsBtn(event, isCorrect) {
-  const targetPlayerNumber = +event.target.dataset.number;
-  if (isCorrect) {
-    playersData[targetPlayerNumber].points += 1;
-  } else {
-    playersData.forEach((playerData, index) => {
-      if (targetPlayerNumber !== index) {
-        playerData.points += 1;
-      }
-    });
-  }
-  document.querySelectorAll('.player-points').forEach((pointInput, index) => {
-    pointInput.value = playersData[index].points;
-  });
-  if (isWinning()) {
-    document.getElementById('win-sound').play();
-    endGame();
-  }
-}
-
-function endGame() {
-  const winningPlayersData = playersData.find(
-    ({ points }) => points === endGamePoint
-  );
-  const message = document.createElement('p');
-  message.classList.add('win-message');
-  message.innerHTML = `${winningPlayersData.playerName} wins!`;
-
-  document
-    .querySelector('.player-cards-container')
-    .insertBefore(message, document.querySelector('.player-cards'));
-
-  const playAgainBtn = document.createElement('button');
-  playAgainBtn.classList.add('btn', 'reset-btn');
-  playAgainBtn.innerText = 'Play again';
-  document.querySelector('.player-cards-container').appendChild(playAgainBtn);
-  document.querySelector('.reset-btn').addEventListener('click', resetGame);
-
-  document.querySelectorAll('.player-cards .btn').forEach((btn) => {
-    btn.disabled = true;
-  });
-  document.querySelectorAll('.player-points').forEach((pointInput) => {
-    pointInput.disabled = true;
-  });
-}
-
-function resetGame() {
-  playersData = [];
-  playerNameInputs.forEach((input) => {
-    input.value = '';
-  });
-  document.querySelector('.player-cards-container').innerHTML = '';
-}
-
+//sorting
 const sortAlphabetically = (questions) => {
   return [...questions].sort((a, b) => {
     const questionA = a.question.toLowerCase();
@@ -373,5 +275,133 @@ function sortQuestions() {
     sortType === 'alphabetical'
       ? sortAlphabetically(quizQuestions)
       : sortRandomly(quizQuestions);
-  displayQuestionsList(sortedQuestions);
+  displayQuestionList(sortedQuestions);
+}
+
+//game
+const gameState = { playersData: [], isGameActive: false };
+const endGamePoint = 10;
+
+function createPlayerCards(playersData) {
+  const ul = document.createElement('ul');
+  ul.classList.add('player-cards');
+  const playerCards = playersData
+    .map((playerData, index) => {
+      const { playerName, points } = playerData;
+      return `<li class="player-card">
+            <h4 class="player-name">${playerName}</h4>
+            <label for="player-points${index}" class="hidden">Points: </label><input type="number" class="player-points" id="player-points${index}" value="${points}" min="0" name="player-points">
+            <div>
+              <button class="correct-btn btn" onclick="handlePointsBtn(${index}, true)"><span class="hidden">Correct</span><i class="fa-regular fa-circle-check"></i></button>
+              <button class="wrong-btn btn" onclick="handlePointsBtn(${index}, false)"><span class="hidden">Wrong</span><i class="fa-regular fa-circle-xmark"></i></button>
+            </div>
+          </li>`;
+    })
+    .join('');
+  ul.innerHTML = playerCards;
+  return ul;
+}
+
+const isWinning = () =>
+  gameState.playersData.some(({ points }) => points === endGamePoint);
+
+function startQuiz(event) {
+  event.preventDefault();
+  playerCardsContainer.innerHTML = '';
+  const playerNames = [...playerNameInputs].map((input) => input.value.trim());
+  if (!areValuesUnique(playerNames)) {
+    const message = createMessage(
+      "You've entered the same name twice. Please enter different names."
+    );
+    playerCardsContainer.appendChild(message);
+    return;
+  }
+  event.target.reset();
+  gameState.isGameActive = true;
+  playerNames.forEach((playerName) => {
+    const player = { playerName, points: 0 };
+    gameState.playersData.push(player);
+  });
+
+  const heading = document.createElement('h3');
+  heading.textContent = 'Game Scoreboard';
+  playerCardsContainer.appendChild(heading);
+
+  gameIntroForm.classList.add('hidden');
+  const ul = createPlayerCards(gameState.playersData);
+  playerCardsContainer.appendChild(ul);
+
+  const quitBtn = createButton('quit-btn', 'Quit game', resetGame);
+  playerCardsContainer.appendChild(quitBtn);
+
+  document.querySelectorAll('.player-points').forEach((pointInput) => {
+    pointInput.addEventListener('keydown', (event) => {
+      event.preventDefault();
+    });
+    pointInput.addEventListener('input', handleInputSpinner);
+  });
+}
+
+function handleInputSpinner() {
+  document.querySelectorAll('.player-points').forEach((pointInput, index) => {
+    gameState.playersData[index].points = +pointInput.value;
+  });
+  if (isWinning()) {
+    document.getElementById('win-sound').play();
+    endGame();
+  }
+}
+
+function handlePointsBtn(id, isCorrect) {
+  if (isCorrect) {
+    gameState.playersData[id].points += 1;
+  } else {
+    gameState.playersData.forEach((playerData, index) => {
+      if (id !== index) {
+        playerData.points += 1;
+      }
+    });
+  }
+  document.querySelectorAll('.player-points').forEach((pointInput, index) => {
+    pointInput.value = gameState.playersData[index].points;
+  });
+  if (isWinning()) {
+    document.getElementById('win-sound').play();
+    endGame();
+  }
+}
+
+function endGame() {
+  const winningPlayersData = gameState.playersData.find(
+    ({ points }) => points === endGamePoint
+  );
+  const message = document.createElement('p');
+  message.classList.add('win-message');
+  message.innerHTML = `${winningPlayersData.playerName} wins!`;
+
+  playerCardsContainer.insertBefore(
+    message,
+    document.querySelector('.player-cards')
+  );
+
+  document.querySelector('.quit-btn').classList.add('hidden');
+  const playAgainBtn = createButton('reset-btn', 'Play again', resetGame);
+  playerCardsContainer.appendChild(playAgainBtn);
+
+  document.querySelectorAll('.player-cards .btn').forEach((btn) => {
+    btn.disabled = true;
+  });
+  document.querySelectorAll('.player-points').forEach((pointInput) => {
+    pointInput.disabled = true;
+  });
+}
+
+function resetGame() {
+  gameState.playersData.splice(0, gameState.playersData.length);
+  gameState.isGameActive = false;
+  playerNameInputs.forEach((input) => {
+    input.value = '';
+  });
+  playerCardsContainer.innerHTML = '';
+  gameIntroForm.classList.remove('hidden');
 }
